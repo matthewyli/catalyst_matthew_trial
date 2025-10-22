@@ -1,0 +1,52 @@
+IN
+--
+Environment (.env)
+  - AEI_NEWS_PROVIDER (asknews | synthetic | hybrid)
+  - AskNews keys: ASKNEWS_API_KEY, ASKNEWS_API_ID, ASKNEWS_BASE_URL
+  - OpenAI keys: OPENAI_API_KEY, OPENAI_API_BASE, OPENAI_MODEL
+  - Optional overrides: OPENAI_CONFIG_MODEL, AEI_CONFIG_ASSETS, OPENAI_KEYWORD_MODEL, OPENAI_SYNTH_* models, OPENAI_RESEARCH_MODEL, OPENAI_RESEARCH_MAX_ITEMS, AEI_MAX_API_CALLS_PER_RUN, AEI_ASKNEWS_CACHE_TTL_MIN, AEI_ASKNEWS_MIN_INTERVAL_SEC
+Runtime Arguments (CLI)
+  - --asset SYMBOL (required, single asset)
+  - --window-min MINUTES (default 90)
+  - --min-score FLOAT (optional override)
+  - --max-items INT (optional override)
+  - --provider MODE (optional override)
+  - --pretty, --debug (optional)
+Optional Runtime JSON
+  - `market_ref` per asset (e.g. {"ETH":{"norm_vol_4h":0.03}})
+
+OUT
+---
+Per-asset block:
+  - impact_score, dir, confidence, n_articles
+  - components (event_weight, sentiment, novelty, source_quality, entity_match, time_decay)
+  - event_types, top_reasons, research_summary
+  - ops_flags (max_kelly_mult, tighten_stops, widen_quotes_bps, suspend_new_longs)
+  - _articles with per-article diagnostics (impact, dir, components, research_note)
+Run summary:
+  - impact_score, dir, confidence, n_articles
+Debug stream (with --debug):
+  - JSON logs for provider selection, cache hits, errors
+
+EXAMPLE CALL
+------------
+python catalyst_matthew_trial\asknews_framework.py --asset ETH --window-min 90 --min-score 0.25 --max-items 20 --pretty --debug
+
+LOGICAL FLOW
+------------
+1. Load configuration
+   - Read .env and optional overrides
+   - If OpenAI config is available, fetch aliases/context/prior data; otherwise fall back to defaults
+   - Normalise aliases, expansions, priors, source-quality, sentiment lexicon, sentiment bumps, ops guidance, and global AskNews query
+2. Initialise helpers
+   - AskNewsClient (throttled), KeywordOracle, RuleEventClassifier, sentiment models, ChatGPTResearcher, OpenAISyntheticNews
+3. Gather articles
+   - Attempt AskNews (asset query, then global); if empty and synthetic allowed, generate via OpenAI pipeline
+   - Deduplicate articles; run researcher pass for relevance and summary
+4. Score articles
+   - Compute entity match, event labels, source quality, novelty, sentiment, time decay, event priors
+   - Derive per-article impact and direction
+5. Aggregate results
+   - Sum impacts (normalised), determine overall direction/confidence
+   - Compute weighted component averages, top reasons, ops guidance, research summary
+   - Append run summary (impact score, direction, confidence, total articles)
