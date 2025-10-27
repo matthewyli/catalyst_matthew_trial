@@ -10,8 +10,8 @@ from .router import KeywordRouter, RouteDecision
 from .weights import WeightManager
 
 try:  # pragma: no cover - optional dependency on BaseTool context
-    from catalyst_matthew_trial.tools.base import ToolContext as BaseToolContext
-    from catalyst_matthew_trial.tools.base import ToolExecutionError as BaseToolExecutionError
+    from tools.base import ToolContext as BaseToolContext
+    from tools.base import ToolExecutionError as BaseToolExecutionError
 except ImportError:  # pragma: no cover
     BaseToolContext = None  # type: ignore[assignment]
 

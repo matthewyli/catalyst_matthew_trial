@@ -30,7 +30,7 @@ Debug stream (with --debug):
 
 EXAMPLE CALL
 ------------
-python -m catalyst_matthew_trial.tools.legacy.asknews_framework --asset ETH --window-min 90 --min-score 0.25 --max-items 20 --pretty --debug
+python -m tools.legacy.asknews_framework --asset ETH --window-min 90 --min-score 0.25 --max-items 20 --pretty --debug
 
 LOGICAL FLOW
 ------------

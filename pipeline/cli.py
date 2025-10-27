@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from ..tools import default_tools
+from tools import default_tools
 from .keyword_config import (
     ASSET_ALIASES,
     BLOCKCHAIN_ALIASES,

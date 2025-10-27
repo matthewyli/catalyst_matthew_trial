@@ -14,3 +14,12 @@ __pycache__/
 # pytest cache
 .pytest_cache/
 
+# Generated dumps and run artifacts
+dumps/
+dump/
+*/dumps/
+*/dump/
+*.dump
+*.dmp
+dumped_series*.csv
+

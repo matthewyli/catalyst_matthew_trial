@@ -14,11 +14,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from catalyst_matthew_trial.pipeline.cli import _build_detector
-from catalyst_matthew_trial.pipeline.strategy_pipeline import StrategyPipeline
-from catalyst_matthew_trial.pipeline.tool_registry import ToolRegistry
-from catalyst_matthew_trial.pipeline.usage_tracker import UsageTracker
-from catalyst_matthew_trial.tools import default_tools
+from pipeline.cli import _build_detector
+from pipeline.strategy_pipeline import StrategyPipeline
+from pipeline.tool_registry import ToolRegistry
+from pipeline.usage_tracker import UsageTracker
+from tools import default_tools
 
 os.environ.setdefault("PIPELINE_DEBUG", "false")
 

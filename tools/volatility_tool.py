@@ -4,12 +4,12 @@ import importlib
 import os
 from typing import Dict, Optional, Sequence
 
-from ..cache import CacheManager, force_refresh_from_env
+from cache import CacheManager, force_refresh_from_env
 from .base import BaseTool, ToolContext, ToolExecutionError, ToolResult
 
 __TOOL_META__ = {
     "name": "volatility_percentile",
-    "module": "catalyst_matthew_trial.tools.volatility_tool",
+    "module": "tools.volatility_tool",
     "object": "VolatilityPercentileTool",
     "version": "1.0",
     "description": "Computes realized volatility percentiles from Mobula price history.",
@@ -73,7 +73,7 @@ class VolatilityPercentileTool(BaseTool):
 
     def _load_module(self):
         try:
-            module = importlib.import_module("catalyst_matthew_trial.tools.legacy.vol_pctile")
+            module = importlib.import_module("tools.legacy.vol_pctile")
         except ImportError as exc:
             raise ToolExecutionError(
                 "vol_pctile (and dependencies pandas, numpy, requests) is required for volatility analysis."

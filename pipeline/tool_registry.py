@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, Iterable, Iterator, Mapping, MutableMapping, Optional
 
-from ..tools.base import BaseTool
+from tools.base import BaseTool
 
 
 class ToolRegistry:

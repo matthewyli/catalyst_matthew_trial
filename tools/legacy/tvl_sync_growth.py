@@ -23,11 +23,11 @@ except ImportError:
 
 __TOOL_META__ = {
     "name": "legacy.tvl_sync_growth",
-    "module": "catalyst_matthew_trial.tools.legacy.tvl_sync_growth",
+    "module": "tools.legacy.tvl_sync_growth",
     "object": "main",
     "description": "Detects synchronized growth across two DeFiLlama TVL series (with optional AskNews enrichment).",
     "phases": ["data_gather", "feature_engineering", "signal_generation"],
-    "entrypoint": "python -m catalyst_matthew_trial.tools.legacy.tvl_sync_growth",
+    "entrypoint": "python -m tools.legacy.tvl_sync_growth",
     "outputs": [
         "growth_events",
         "correlation",

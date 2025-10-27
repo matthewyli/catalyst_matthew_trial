@@ -4,12 +4,12 @@ import importlib
 import os
 from typing import Dict, Optional
 
-from ..cache import CacheManager, force_refresh_from_env
+from cache import CacheManager, force_refresh_from_env
 from .base import BaseTool, ToolContext, ToolExecutionError, ToolResult
 
 __TOOL_META__ = {
     "name": "tvl_growth",
-    "module": "catalyst_matthew_trial.tools.tvl_tool",
+    "module": "tools.tvl_tool",
     "object": "TVLGrowthTool",
     "version": "1.0",
     "description": "Analyses DeFiLlama TVL momentum to gauge liquidity trends.",
@@ -103,7 +103,7 @@ class TVLGrowthTool(BaseTool):
         strict_mode = bool(options.get("strict_io"))
 
         try:
-            module = importlib.import_module("catalyst_matthew_trial.tools.legacy.tvl_sync_growth")
+            module = importlib.import_module("tools.legacy.tvl_sync_growth")
             fetch_llama_series = getattr(module, "fetch_llama_series")
         except Exception as exc:  # pragma: no cover - runtime import failure
             raise ToolExecutionError(f"Unable to import tvl_sync_growth: {exc}") from exc

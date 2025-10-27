@@ -6,7 +6,7 @@ from .base import BaseTool, ToolContext, ToolExecutionError, ToolResult
 
 __TOOL_META__ = {
     "name": "asknews_impact",
-    "module": "catalyst_matthew_trial.tools.asknews_tool",
+    "module": "tools.asknews_tool",
     "object": "AskNewsImpactTool",
     "version": "1.0",
     "description": "Scores short-horizon crypto news impact using AskNews + AEI.",

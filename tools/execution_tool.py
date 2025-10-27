@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any, Dict, List
 
-from ..execution import ExecutionRequest, ExecutionResponse, get_execution_adapter_from_env
+from execution import ExecutionRequest, ExecutionResponse, get_execution_adapter_from_env
 from .base import BaseTool, ToolContext, ToolExecutionError, ToolResult
 
 
@@ -16,7 +16,7 @@ class ExecutionAdapterTool(BaseTool):
 
     __TOOL_META__ = {
         "name": name,
-        "module": "catalyst_matthew_trial.tools.execution_tool",
+        "module": "tools.execution_tool",
         "object": "ExecutionAdapterTool",
         "phases": ["execution"],
         "outputs": ["execution_log"],

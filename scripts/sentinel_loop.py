@@ -15,7 +15,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from catalyst_matthew_trial.pipeline.cli import build_pipeline  # noqa: E402
+from pipeline.cli import build_pipeline  # noqa: E402
 from run_strategy_with_dummy_trade import run_strategy  # noqa: E402
 
 DEFAULT_PROMPT = (

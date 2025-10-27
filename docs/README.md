@@ -65,7 +65,7 @@ required keys: ASKNEWS_API_ID, ASKNEWS_API_KEY, OPENAI_API_KEY (for llm assist a
 keyword trainer (IMPORTANT!!!!!!!!)
 A. edit prompts/router_training.jsonl (or your own json/jsonl) so each entry has a prompt and the tool ids it should pick.
 B. run
-  python scripts/train_keyword_weights.py --dataset prompts/router_training.jsonl --output catalyst_matthew_trial/pipeline/keyword_weights.json
+  python scripts/train_keyword_weights.py --dataset prompts/router_training.jsonl --output pipeline/keyword_weights.json
 C. restart the pipeline scripts; keyword_detector will load the new weights automatically (or from PIPELINE_KEYWORD_WEIGHTS_PATH if set).
 
 commands and sample output

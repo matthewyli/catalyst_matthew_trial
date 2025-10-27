@@ -13,11 +13,11 @@ import requests
 
 __TOOL_META__ = {
     "name": "legacy.vol_pctile",
-    "module": "catalyst_matthew_trial.tools.legacy.vol_pctile",
+    "module": "tools.legacy.vol_pctile",
     "object": "main",
     "description": "Calculates realized volatility percentiles from Mobula price history.",
     "phases": ["feature_engineering", "risk_sizing"],
-    "entrypoint": "python -m catalyst_matthew_trial.tools.legacy.vol_pctile",
+    "entrypoint": "python -m tools.legacy.vol_pctile",
     "outputs": ["vol_percentile", "confidence", "window_breakdown"],
 }
 

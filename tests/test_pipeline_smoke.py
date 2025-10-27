@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from catalyst_matthew_trial.pipeline.keyword_config import ToolKeywordConfig
-from catalyst_matthew_trial.pipeline.keyword_detector import KeywordDetector
-from catalyst_matthew_trial.pipeline.strategy_pipeline import StrategyPipeline
-from catalyst_matthew_trial.pipeline.tool_registry import ToolRegistry
-from catalyst_matthew_trial.pipeline.usage_tracker import UsageTracker
-from catalyst_matthew_trial.tools.base import BaseTool, ToolContext, ToolResult
+from pipeline.keyword_config import ToolKeywordConfig
+from pipeline.keyword_detector import KeywordDetector
+from pipeline.strategy_pipeline import StrategyPipeline
+from pipeline.tool_registry import ToolRegistry
+from pipeline.usage_tracker import UsageTracker
+from tools.base import BaseTool, ToolContext, ToolResult
 
 
 class StubTool(BaseTool):

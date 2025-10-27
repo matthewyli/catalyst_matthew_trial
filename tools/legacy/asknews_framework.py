@@ -27,11 +27,11 @@ except ImportError as exc:
 
 __TOOL_META__ = {
     "name": "legacy.asknews_framework",
-    "module": "catalyst_matthew_trial.tools.legacy.asknews_framework",
+    "module": "tools.legacy.asknews_framework",
     "object": "main",
     "description": "AEI pipeline that scores near-term crypto news using AskNews + OpenAI sentiment.",
     "phases": ["data_gather", "signal_generation", "research"],
-    "entrypoint": "python -m catalyst_matthew_trial.tools.legacy.asknews_framework",
+    "entrypoint": "python -m tools.legacy.asknews_framework",
     "outputs": [
         "impact_score",
         "direction",

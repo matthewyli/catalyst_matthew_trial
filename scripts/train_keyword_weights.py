@@ -6,13 +6,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
 
-from catalyst_matthew_trial.pipeline.keyword_config import (
+from pipeline.keyword_config import (
     ASSET_ALIASES,
     BLOCKCHAIN_ALIASES,
     TIMEFRAME_KEYWORDS,
     TOOL_KEYWORDS,
 )
-from catalyst_matthew_trial.pipeline.keyword_detector import KeywordDetector
+from pipeline.keyword_detector import KeywordDetector
 
 
 @dataclass
