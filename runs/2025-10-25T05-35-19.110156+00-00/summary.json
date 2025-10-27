@@ -1,0 +1,309 @@
+{
+  "prompt": "Run feature signal execute for SOL",
+  "primary_asset": "SOL",
+  "assets": [
+    "SOL"
+  ],
+  "detected_keywords": [
+    "execute",
+    "feature",
+    "signal"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "stub_feature_a": [
+          "feature"
+        ],
+        "stub_feature_b": [
+          "feature"
+        ],
+        "stub_signal": [
+          "signal"
+        ],
+        "stub_execution": [
+          "execute"
+        ]
+      },
+      "matched_patterns": {},
+      "keyword_scores": {
+        "stub_data": 0.0,
+        "stub_feature_a": 1.185,
+        "stub_feature_b": 1.185,
+        "stub_signal": 1.18,
+        "stub_risk": 0.0,
+        "stub_execution": 1.185
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "stub_data": 0.0,
+          "stub_feature_a": 1.185,
+          "stub_feature_b": 1.185,
+          "stub_signal": 1.18,
+          "stub_risk": 0.0,
+          "stub_execution": 1.185
+        },
+        "llm_recommendations": [],
+        "llm_weight": 1.0,
+        "blockchain": "solana"
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "llm_recommendations": [],
+      "combined_weights": {
+        "stub_feature_b": 0.22518479408658926,
+        "stub_risk": 0.05,
+        "stub_signal": 0.2244456177402323,
+        "stub_feature_a": 0.22518479408658926,
+        "stub_data": 0.05,
+        "stub_execution": 0.22518479408658926
+      },
+      "tool_ranking": [
+        "stub_feature_b",
+        "stub_feature_a",
+        "stub_execution",
+        "stub_signal",
+        "stub_risk",
+        "stub_data"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "stub_data"
+        },
+        {
+          "phase": "feature_engineering",
+          "tool": "stub_feature_b"
+        },
+        {
+          "phase": "feature_engineering",
+          "tool": "stub_feature_a"
+        },
+        {
+          "phase": "signal_generation",
+          "tool": "stub_signal"
+        },
+        {
+          "phase": "risk_sizing",
+          "tool": "stub_risk"
+        },
+        {
+          "phase": "execution",
+          "tool": "stub_execution"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "SOL"
+        ],
+        "primary_symbol": "SOL",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Run feature signal execute for SOL",
+        "detected_keywords": [
+          "execute",
+          "feature",
+          "signal"
+        ],
+        "router": {
+          "matched_terms": {
+            "stub_feature_a": [
+              "feature"
+            ],
+            "stub_feature_b": [
+              "feature"
+            ],
+            "stub_signal": [
+              "signal"
+            ],
+            "stub_execution": [
+              "execute"
+            ]
+          },
+          "matched_patterns": {},
+          "keyword_scores": {
+            "stub_data": 0.0,
+            "stub_feature_a": 1.185,
+            "stub_feature_b": 1.185,
+            "stub_signal": 1.18,
+            "stub_risk": 0.0,
+            "stub_execution": 1.185
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "stub_data": 0.0,
+              "stub_feature_a": 1.185,
+              "stub_feature_b": 1.185,
+              "stub_signal": 1.18,
+              "stub_risk": 0.0,
+              "stub_execution": 1.185
+            },
+            "llm_recommendations": [],
+            "llm_weight": 1.0,
+            "blockchain": "solana"
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "llm_recommendations": [],
+          "combined_weights": {
+            "stub_feature_b": 0.22518479408658926,
+            "stub_risk": 0.05,
+            "stub_signal": 0.2244456177402323,
+            "stub_feature_a": 0.22518479408658926,
+            "stub_data": 0.05,
+            "stub_execution": 0.22518479408658926
+          },
+          "tool_ranking": [
+            "stub_feature_b",
+            "stub_feature_a",
+            "stub_execution",
+            "stub_signal",
+            "stub_risk",
+            "stub_data"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "stub_data"
+            },
+            {
+              "phase": "feature_engineering",
+              "tool": "stub_feature_b"
+            },
+            {
+              "phase": "feature_engineering",
+              "tool": "stub_feature_a"
+            },
+            {
+              "phase": "signal_generation",
+              "tool": "stub_signal"
+            },
+            {
+              "phase": "risk_sizing",
+              "tool": "stub_risk"
+            },
+            {
+              "phase": "execution",
+              "tool": "stub_execution"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "SOL"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [],
+          "goals": []
+        },
+        "options": {
+          "force_refresh": false
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "stub_execution",
+          "tool_score": 0.22518479408658926
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "stub_data": {
+            "phase": "data_gather",
+            "tool": "stub_data",
+            "score": 0.6
+          }
+        },
+        "feature_engineering": {
+          "stub_feature_b": {
+            "phase": "feature_engineering",
+            "tool": "stub_feature_b",
+            "score": 0.3
+          },
+          "stub_feature_a": {
+            "phase": "feature_engineering",
+            "tool": "stub_feature_a",
+            "score": 0.7
+          }
+        },
+        "signal_generation": {
+          "stub_signal": {
+            "phase": "signal_generation",
+            "tool": "stub_signal",
+            "score": 0.5
+          }
+        },
+        "risk_sizing": {
+          "stub_risk": {
+            "phase": "risk_sizing",
+            "tool": "stub_risk",
+            "score": 0.4
+          }
+        },
+        "execution": {
+          "stub_execution": {
+            "phase": "execution",
+            "tool": "stub_execution",
+            "score": 0.2
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-25T05:35:19.109353",
+      "phases": [],
+      "alerts": [],
+      "total_duration_sec": 8.700002217665315e-05
+    }
+  },
+  "missing_tools": [],
+  "weights_before": {
+    "stub_feature_b": 0.16666666666666666,
+    "stub_risk": 0.16666666666666666,
+    "stub_signal": 0.16666666666666666,
+    "stub_feature_a": 0.16666666666666666,
+    "stub_data": 0.16666666666666666,
+    "stub_execution": 0.16666666666666666
+  },
+  "weights_after": {
+    "stub_feature_b": 0.16666666666666666,
+    "stub_risk": 0.16666666666666666,
+    "stub_signal": 0.16666666666666666,
+    "stub_feature_a": 0.16666666666666666,
+    "stub_data": 0.16666666666666666,
+    "stub_execution": 0.16666666666666666
+  },
+  "selection_weights": {
+    "stub_data": 0.16666666666666669,
+    "stub_feature_b": 0.16666666666666669,
+    "stub_feature_a": 0.16666666666666669,
+    "stub_signal": 0.16666666666666669,
+    "stub_risk": 0.16666666666666669,
+    "stub_execution": 0.16666666666666669
+  },
+  "strategy_notes": [
+    "No actionable tool output for SOL; maintain neutral stance."
+  ],
+  "recommendation": "neutral",
+  "score": 0.0,
+  "phase_alerts": [],
+  "timestamp": "2025-10-25T05:35:19.110156+00:00"
+}

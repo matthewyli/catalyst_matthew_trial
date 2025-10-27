@@ -1,0 +1,14 @@
+Prompt: Run feature signal execute for SOL
+Primary asset: SOL
+Assets: SOL
+Recommendation: neutral (score=0.000)
+
+Total runtime: 0.000s
+Phase timings:
+Combined weights:
+  - stub_feature_b: 0.225
+  - stub_risk: 0.050
+  - stub_signal: 0.224
+  - stub_feature_a: 0.225
+  - stub_data: 0.050
+  - stub_execution: 0.225

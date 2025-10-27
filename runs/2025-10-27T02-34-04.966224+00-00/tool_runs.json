@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.25313704068958914,
+    "summary": "SOL news impact 0.15 (up, confidence 14.83%) from 5 articles.",
+    "payload": {
+      "value": 0.1532,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.1532,
+        "direction": "up",
+        "confidence": 0.1483,
+        "n_articles": 5,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 1.0,
+          "novelty": 0.8617,
+          "source_quality": 0.6,
+          "entity_match": 0.7873,
+          "time_decay": 0.6903
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Technological Advancements",
+          "Average source quality 0.60",
+          "Fresh within 30 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments around Solana include a minor exploit that was quickly patched, a new partnership aimed at enhancing blockchain solutions, and a proposed regulatory framework in the EU. Additionally, SOL has been listed on a new exchange, improving its accessibility, and a Layer 2 scaling solution is nearing completion, which could enhance network efficiency."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24919188833317352,
+    "summary": "chain:Solana TVL 25,151,488,607 USD | avg momentum 5.60% (1d/7d/30d change: 1D=3.53%, 7D=7.50%, 30D=-2.19%)",
+    "payload": {
+      "value": 0.05599333460472844,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 25151488607.0,
+        "pct_changes": {
+          "change_1d": 0.0353,
+          "change_7d": 0.075,
+          "change_30d": -0.0219,
+          "change_90d": 0.1357
+        },
+        "trailing_ratio": -0.0176
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5734242472252742
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.4265757527747258
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.11173399353429114
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.1532,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.1532,
+            "direction": "up",
+            "confidence": 0.1483,
+            "n_articles": 5,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 1.0,
+              "novelty": 0.8617,
+              "source_quality": 0.6,
+              "entity_match": 0.7873,
+              "time_decay": 0.6903
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 30 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments around Solana include a minor exploit that was quickly patched, a new partnership aimed at enhancing blockchain solutions, and a proposed regulatory framework in the EU. Additionally, SOL has been listed on a new exchange, improving its accessibility, and a Layer 2 scaling solution is nearing completion, which could enhance network efficiency."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.05599333460472844,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 25151488607.0,
+            "pct_changes": {
+              "change_1d": 0.0353,
+              "change_7d": 0.075,
+              "change_30d": -0.0219,
+              "change_90d": 0.1357
+            },
+            "trailing_ratio": -0.0176
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.2473842931104039,
+    "summary": "SOL volatility ~24.9th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.25064392567298827,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.5487477670787483,
+            "pctile": 44.05251141552512,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.43406763821341676,
+            "pctile": 17.73972602739726,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.36459024286269714,
+            "pctile": 3.3333333333333335,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 24.935607432701172,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.12665132276460228,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.2796803652968036,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 44.05251141552512,
+        "pctile_14d": 17.73972602739726,
+        "pctile_30d": 3.3333333333333335
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.25028677786683334,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

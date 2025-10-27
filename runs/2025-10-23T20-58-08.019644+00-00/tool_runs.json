@@ -1,0 +1,74 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.1439634194747616,
+    "summary": "chain:Solana TVL 23,797,385,135 USD | avg momentum -0.38% (1d/7d/30d change: 1D=0.00%, 7D=2.66%, 30D=-10.20%)",
+    "payload": {
+      "metric": "chain:Solana",
+      "latest_tvl": 23797385135.0,
+      "pct_changes": {
+        "change_1d": 0.0,
+        "change_7d": 0.0266,
+        "change_30d": -0.102,
+        "change_90d": 0.0604
+      },
+      "trailing_ratio": -0.0756
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.5150468126661853,
+    "summary": "SOL news impact 0.25 (up, confidence 23.03%) from 4 articles.",
+    "payload": {
+      "asset": "SOL",
+      "window_min": 90,
+      "impact_score": 0.247,
+      "direction": "up",
+      "confidence": 0.2303,
+      "n_articles": 4,
+      "components": {
+        "event_weight": 0.25,
+        "sentiment": 0.4215,
+        "novelty": 1.0,
+        "source_quality": 0.6,
+        "entity_match": 0.8893,
+        "time_decay": 0.5942
+      },
+      "top_reasons": [
+        "Highest-impact article tagged Market Adoption",
+        "Average source quality 0.60",
+        "Fresh within 60 minutes"
+      ],
+      "ops_flags": {
+        "suspend_new_longs": false,
+        "tighten_stops": false,
+        "max_kelly_mult": 1.0,
+        "widen_quotes_bps": 0
+      },
+      "research_summary": "Recent developments surrounding Solana include a new exploit raising security concerns, a strategic partnership aimed at enhancing blockchain adoption, and the launch of a Layer 2 solution to improve scalability. However, regulatory challenges loom with new guidelines affecting Solana projects and a leading exchange planning to delist SOL due to compliance issues."
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.09404038317572772,
+    "summary": "volatility_percentile failed: Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}",
+    "payload": {
+      "error": "Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}"
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2469493846833253,
+    "summary": "No orders to execute.",
+    "payload": {
+      "phase": "execution",
+      "mode": "paper",
+      "executed": false,
+      "reason": "empty_orders"
+    }
+  }
+]

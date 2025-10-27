@@ -1,0 +1,14 @@
+Prompt: Design a hedge strategy for a diversified crypto portfolio when macro sentiment deteriorates and drawdown breaches 10%.
+Primary asset: BTC
+Assets: BTC
+Recommendation: neutral (score=0.021)
+
+Total runtime: 40.798s
+Phase timings:
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+Combined weights:
+  - volatility_percentile: 0.040
+  - execution_adapter: 0.078
+  - tvl_growth: 0.060
+  - asknews_impact: 0.822

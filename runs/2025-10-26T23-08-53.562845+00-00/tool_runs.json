@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.25514604054569084,
+    "summary": "SOL news impact 0.22 (up, confidence 20.44%) from 3 articles.",
+    "payload": {
+      "value": 0.2153,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.2153,
+        "direction": "up",
+        "confidence": 0.2044,
+        "n_articles": 3,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 1.0,
+          "novelty": 0.9553,
+          "source_quality": 0.6,
+          "entity_match": 0.9106,
+          "time_decay": 0.6494
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Technological Advancements",
+          "Average source quality 0.60",
+          "Fresh within 45 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments in Solana include a strategic partnership with a major financial institution aimed at enhancing blockchain adoption and a new Layer 2 solution to improve scalability. However, regulatory concerns and a discovered security vulnerability pose risks to the network's stability and compliance. A new exchange listing is expected to boost market accessibility for SOL."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.248674363575603,
+    "summary": "chain:Solana TVL 24,818,662,313 USD | avg momentum 4.77% (1d/7d/30d change: 1D=2.84%, 7D=6.35%, 30D=1.15%)",
+    "payload": {
+      "value": 0.04768091894703514,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24818662313.0,
+        "pct_changes": {
+          "change_1d": 0.0284,
+          "change_7d": 0.0635,
+          "change_30d": 0.0115,
+          "change_90d": 0.0873
+        },
+        "trailing_ratio": -0.0319
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5739886550943973
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.42601134490560266
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.14389236984878523
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.2153,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.2153,
+            "direction": "up",
+            "confidence": 0.2044,
+            "n_articles": 3,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 1.0,
+              "novelty": 0.9553,
+              "source_quality": 0.6,
+              "entity_match": 0.9106,
+              "time_decay": 0.6494
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in Solana include a strategic partnership with a major financial institution aimed at enhancing blockchain adoption and a new Layer 2 solution to improve scalability. However, regulatory concerns and a discovered security vulnerability pose risks to the network's stability and compliance. A new exchange listing is expected to boost market accessibility for SOL."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04768091894703514,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24818662313.0,
+            "pct_changes": {
+              "change_1d": 0.0284,
+              "change_7d": 0.0635,
+              "change_30d": 0.0115,
+              "change_90d": 0.0873
+            },
+            "trailing_ratio": -0.0319
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.24570916190083988,
+    "summary": "SOL volatility ~13.5th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.3648103234455951,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.4128267706067982,
+            "pctile": 23.892694063926943,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.3764417553296055,
+            "pctile": 9.97716894977169,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.31388578166492714,
+            "pctile": 1.2785388127853883,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 13.518967655440491,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.15025326745208042,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.565068493150685,
+          "c4": 0.9756006527954985
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 23.892694063926943,
+        "pctile_14d": 9.97716894977169,
+        "pctile_30d": 1.2785388127853883
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2504704339778663,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

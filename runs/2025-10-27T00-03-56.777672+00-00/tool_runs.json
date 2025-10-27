@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.25441471210672806,
+    "summary": "SOL news impact 0.13 (up, confidence 12.97%) from 4 articles.",
+    "payload": {
+      "value": 0.1321,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.1321,
+        "direction": "up",
+        "confidence": 0.1297,
+        "n_articles": 4,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 1.0,
+          "novelty": 0.8994,
+          "source_quality": 0.6,
+          "entity_match": 0.8557,
+          "time_decay": 0.7173
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Market Adoption",
+          "Average source quality 0.60",
+          "Fresh within 30 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments in the Solana ecosystem include a minor security breach that was quickly resolved, a strategic partnership with a major financial institution, updated regulatory guidelines affecting Solana projects, and progress on a Layer 2 scaling solution. These events present a mixed sentiment landscape, with potential positive impacts from partnerships and scaling solutions, but caution is warranted due to regulatory changes and past security incidents."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24886275610929542,
+    "summary": "chain:Solana TVL 24,818,662,313 USD | avg momentum 4.77% (1d/7d/30d change: 1D=2.84%, 7D=6.35%, 30D=1.15%)",
+    "payload": {
+      "value": 0.04768091894703514,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24818662313.0,
+        "pct_changes": {
+          "change_1d": 0.0284,
+          "change_7d": 0.0635,
+          "change_30d": 0.0115,
+          "change_90d": 0.0873
+        },
+        "trailing_ratio": -0.0319
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5737832912454742
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.4262167087545258
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.09611917711752377
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.1321,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.1321,
+            "direction": "up",
+            "confidence": 0.1297,
+            "n_articles": 4,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 1.0,
+              "novelty": 0.8994,
+              "source_quality": 0.6,
+              "entity_match": 0.8557,
+              "time_decay": 0.7173
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Market Adoption",
+              "Average source quality 0.60",
+              "Fresh within 30 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in the Solana ecosystem include a minor security breach that was quickly resolved, a strategic partnership with a major financial institution, updated regulatory guidelines affecting Solana projects, and progress on a Layer 2 scaling solution. These events present a mixed sentiment landscape, with potential positive impacts from partnerships and scaling solutions, but caution is warranted due to regulatory changes and past security incidents."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04768091894703514,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24818662313.0,
+            "pct_changes": {
+              "change_1d": 0.0284,
+              "change_7d": 0.0635,
+              "change_30d": 0.0115,
+              "change_90d": 0.0873
+            },
+            "trailing_ratio": -0.0319
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.24631895342911073,
+    "summary": "SOL volatility ~14.4th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.3561109813162492,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.4305863750968192,
+            "pctile": 26.438356164383563,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.3705464150988552,
+            "pctile": 9.39497716894977,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.3184671590082661,
+            "pctile": 1.4269406392694064,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 14.388901868375077,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.1530448517685603,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.6015981735159818,
+          "c4": 0.989097973084551
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 26.438356164383563,
+        "pctile_14d": 9.39497716894977,
+        "pctile_30d": 1.4269406392694064
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2504035783548657,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

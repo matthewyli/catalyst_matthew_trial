@@ -1,0 +1,14 @@
+Prompt: Trend-follow SOL with a 4h EMA cross and TVL filter
+Primary asset: SOL
+Assets: SOL
+Recommendation: neutral (score=0.000)
+
+Total runtime: 0.006s
+Phase timings:
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+Combined weights:
+  - tvl_growth: 0.740
+  - execution_adapter: 0.052
+  - volatility_percentile: 0.040
+  - asknews_impact: 0.167

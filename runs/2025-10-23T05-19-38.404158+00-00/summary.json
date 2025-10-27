@@ -1,0 +1,247 @@
+{
+  "prompt": "Need volatility percentile regime on ETH and news sentiment",
+  "primary_asset": "ETH",
+  "assets": [
+    "ETH"
+  ],
+  "detected_keywords": [
+    "\\bnews(?:flow|wire)?\\b",
+    "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b",
+    "news",
+    "percentile",
+    "sentiment",
+    "vol",
+    "volatility"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "asknews_impact": [
+          "news",
+          "sentiment"
+        ],
+        "volatility_percentile": [
+          "vol",
+          "volatility",
+          "percentile"
+        ]
+      },
+      "matched_patterns": {
+        "asknews_impact": [
+          "\\bnews(?:flow|wire)?\\b"
+        ],
+        "volatility_percentile": [
+          "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b"
+        ]
+      },
+      "keyword_scores": {
+        "asknews_impact": 4.099,
+        "tvl_growth": 0.0,
+        "volatility_percentile": 5.4435
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 4.099,
+          "tvl_growth": 0.0,
+          "volatility_percentile": 5.4435
+        },
+        "blockchain": "ethereum"
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "combined_weights": {
+        "volatility_percentile": 0.4633965662284864,
+        "tvl_growth": 0.06408296916272797,
+        "asknews_impact": 0.4725204646087856
+      },
+      "tool_ranking": [
+        "asknews_impact",
+        "volatility_percentile",
+        "tvl_growth"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "ETH"
+        ],
+        "primary_symbol": "ETH",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Need volatility percentile regime on ETH and news sentiment",
+        "detected_keywords": [
+          "\\bnews(?:flow|wire)?\\b",
+          "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b",
+          "news",
+          "percentile",
+          "sentiment",
+          "vol",
+          "volatility"
+        ],
+        "router": {
+          "matched_terms": {
+            "asknews_impact": [
+              "news",
+              "sentiment"
+            ],
+            "volatility_percentile": [
+              "vol",
+              "volatility",
+              "percentile"
+            ]
+          },
+          "matched_patterns": {
+            "asknews_impact": [
+              "\\bnews(?:flow|wire)?\\b"
+            ],
+            "volatility_percentile": [
+              "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b"
+            ]
+          },
+          "keyword_scores": {
+            "asknews_impact": 4.099,
+            "tvl_growth": 0.0,
+            "volatility_percentile": 5.4435
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 4.099,
+              "tvl_growth": 0.0,
+              "volatility_percentile": 5.4435
+            },
+            "blockchain": "ethereum"
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "combined_weights": {
+            "volatility_percentile": 0.4633965662284864,
+            "tvl_growth": 0.06408296916272797,
+            "asknews_impact": 0.4725204646087856
+          },
+          "tool_ranking": [
+            "asknews_impact",
+            "volatility_percentile",
+            "tvl_growth"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "ETH"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [
+            "volatility",
+            "sentiment"
+          ],
+          "goals": []
+        },
+        "runtime": {
+          "current_phase": "feature_engineering",
+          "active_tool": "volatility_percentile",
+          "tool_score": 0.4633965662284864
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "asknews_impact": {
+            "asset": "ETH",
+            "window_min": 90,
+            "impact_score": 0.6146,
+            "direction": "down",
+            "confidence": 0.5804,
+            "n_articles": 3,
+            "components": {
+              "event_weight": 0.7472,
+              "sentiment": -0.591,
+              "novelty": 0.86,
+              "source_quality": 0.8592,
+              "entity_match": 0.8791,
+              "time_decay": 0.6446
+            },
+            "top_reasons": [
+              "Highest-impact article tagged exploit, regulatory",
+              "Average source quality 0.86",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": true,
+              "tighten_stops": true,
+              "max_kelly_mult": 0.4,
+              "widen_quotes_bps": 6
+            },
+            "research_summary": null
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "_notes": [
+            "ALERT: need execution tool"
+          ]
+        }
+      }
+    }
+  },
+  "missing_tools": [
+    "execution:<missing>"
+  ],
+  "weights_before": {
+    "tvl_growth": 0.21360989720909324,
+    "volatility_percentile": 0.21360989720909324,
+    "asknews_impact": 0.5727802055818135
+  },
+  "weights_after": {
+    "tvl_growth": 0.20614835242828197,
+    "volatility_percentile": 0.20614835242828197,
+    "asknews_impact": 0.5877032951434361
+  },
+  "selection_weights": {
+    "asknews_impact": 1.0
+  },
+  "strategy_notes": [
+    "News: impact 0.61 down (confidence 58%)."
+  ],
+  "recommendation": "neutral",
+  "score": 0.0,
+  "phase_alerts": [
+    "ALERT: need execution tool"
+  ],
+  "timestamp": "2025-10-23T05:19:38.404158+00:00"
+}

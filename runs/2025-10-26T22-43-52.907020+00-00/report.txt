@@ -1,0 +1,17 @@
+Prompt: Run a SOL swing strategy that trades only when news sentiment is strongly positive, TVL shows a solid week-over-week climb, and volatility stays in a safe regime. If sentiment turns negative or TVL momentum fades, rotate out quickly. Target conservative risk with tight stops.
+Primary asset: SOL
+Assets: SOL
+Recommendation: neutral (score=0.111)
+
+Total runtime: 40.733s
+Phase timings:
+  - data_gather: 40.731s | selected: asknews_impact, tvl_growth | candidates: asknews_impact, tvl_growth | note: combined 2 tools
+  - feature_engineering: 0.002s | selected: volatility_percentile | candidates: volatility_percentile, tvl_growth
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+  - execution: 0.000s | selected: execution_adapter | candidates: execution_adapter
+Combined weights:
+  - asknews_impact: 0.352
+  - tvl_growth: 0.261
+  - execution_adapter: 0.154
+  - volatility_percentile: 0.233

@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.27195286989412476,
+    "summary": "SOL news impact 0.20 (up, confidence 18.98%) from 4 articles.",
+    "payload": {
+      "value": 0.199,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.199,
+        "direction": "up",
+        "confidence": 0.1898,
+        "n_articles": 4,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.8116,
+          "novelty": 0.8963,
+          "source_quality": 0.6,
+          "entity_match": 0.9335,
+          "time_decay": 0.671
+        },
+        "top_reasons": [
+          "Highest-impact article tagged metrics",
+          "Average source quality 0.60",
+          "Fresh within 60 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments in the Solana ecosystem include a minor exploit that was quickly contained, a strategic partnership with a major financial institution, and the rollout of a Layer 2 solution aimed at enhancing scalability. However, regulatory scrutiny poses potential risks to Solana's operations. Market volatility is also a concern as traders speculate on upcoming announcements."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24434487083937406,
+    "summary": "chain:Solana TVL 24,794,368,492 USD | avg momentum 4.67% (1d/7d/30d change: 1D=2.74%, 7D=6.25%, 30D=1.05%)",
+    "payload": {
+      "value": 0.04665539338127235,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24794368492.0,
+        "pct_changes": {
+          "change_1d": 0.0274,
+          "change_7d": 0.0625,
+          "change_30d": 0.0105,
+          "change_90d": 0.0862
+        },
+        "trailing_ratio": -0.0328
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.58), tvl_growth(0.42)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5786782913269026
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.4213217086730974
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.1348139100322668
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.199,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.199,
+            "direction": "up",
+            "confidence": 0.1898,
+            "n_articles": 4,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.8116,
+              "novelty": 0.8963,
+              "source_quality": 0.6,
+              "entity_match": 0.9335,
+              "time_decay": 0.671
+            },
+            "top_reasons": [
+              "Highest-impact article tagged metrics",
+              "Average source quality 0.60",
+              "Fresh within 60 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in the Solana ecosystem include a minor exploit that was quickly contained, a strategic partnership with a major financial institution, and the rollout of a Layer 2 solution aimed at enhancing scalability. However, regulatory scrutiny poses potential risks to Solana's operations. Market volatility is also a concern as traders speculate on upcoming announcements."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04665539338127235,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24794368492.0,
+            "pct_changes": {
+              "change_1d": 0.0274,
+              "change_7d": 0.0625,
+              "change_30d": 0.0105,
+              "change_90d": 0.0862
+            },
+            "trailing_ratio": -0.0328
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.231695400630589,
+    "summary": "SOL volatility ~4.9th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.45070794890755544,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.3165183963241828,
+            "pctile": 10.970319634703197,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.25363899847062177,
+            "pctile": 1.0616438356164384,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.27743866419795693,
+            "pctile": 0.3767123287671233,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 4.929205109244457,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.1726477010208897,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.9657534246575342,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 10.970319634703197,
+        "pctile_14d": 1.0616438356164384,
+        "pctile_30d": 0.3767123287671233
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2520068586359121,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

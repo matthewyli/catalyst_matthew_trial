@@ -1,0 +1,112 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.16511548996864095,
+    "summary": "chain:Solana TVL 23,633,650,551 USD | avg momentum -0.80% (1d/7d/30d change: 1D=0.34%, 7D=1.96%, 30D=-10.82%)",
+    "payload": {
+      "metric": "chain:Solana",
+      "latest_tvl": 23633650551.0,
+      "pct_changes": {
+        "change_1d": 0.0034,
+        "change_7d": 0.0196,
+        "change_30d": -0.1082,
+        "change_90d": 0.0531
+      },
+      "trailing_ratio": -0.0814
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.48080850480024434,
+    "summary": "SOL news impact 0.30 (up, confidence 27.69%) from 5 articles.",
+    "payload": {
+      "asset": "SOL",
+      "window_min": 90,
+      "impact_score": 0.3018,
+      "direction": "up",
+      "confidence": 0.2769,
+      "n_articles": 5,
+      "components": {
+        "event_weight": 0.25,
+        "sentiment": 0.7202,
+        "novelty": 0.9199,
+        "source_quality": 0.6,
+        "entity_match": 0.9651,
+        "time_decay": 0.6355
+      },
+      "top_reasons": [
+        "Highest-impact article tagged Technological Advancements",
+        "Average source quality 0.60",
+        "Fresh within 45 minutes"
+      ],
+      "ops_flags": {
+        "suspend_new_longs": false,
+        "tighten_stops": false,
+        "max_kelly_mult": 1.0,
+        "widen_quotes_bps": 0
+      },
+      "research_summary": "Recent developments surrounding Solana include a strategic partnership with a major financial institution, a minor exploit that was quickly patched, a new exchange listing in Asia, regulatory guidelines impacting operations, and an upcoming Layer 2 upgrade aimed at enhancing scalability. These events present both opportunities and risks for SOL in the short term."
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.10134692101773546,
+    "summary": "SOL volatility ~21.1th percentile (confidence 100%)",
+    "payload": {
+      "asset": "SOL",
+      "windows": [
+        7,
+        14,
+        30
+      ],
+      "results": [
+        {
+          "w": 7,
+          "realized_vol": 0.4662473672714754,
+          "pctile": 31.347031963470318,
+          "confidence": 1.0
+        },
+        {
+          "w": 14,
+          "realized_vol": 0.4402115214135206,
+          "pctile": 18.207762557077626,
+          "confidence": 1.0
+        },
+        {
+          "w": 30,
+          "realized_vol": 0.4284626662933493,
+          "pctile": 8.105022831050228,
+          "confidence": 1.0
+        }
+      ],
+      "vol_percentile": 21.09050844755913,
+      "vol_percentile_conf": 1.0,
+      "confidence_scalar": 0.14607149842326259,
+      "confidence_components": {
+        "c1": 0.002949946353269955,
+        "c2": 1.0,
+        "c3": 0.49486301369863006,
+        "c4": 1.0
+      },
+      "mobula_key_present": false,
+      "pctile_7d": 31.347031963470318,
+      "pctile_14d": 18.207762557077626,
+      "pctile_30d": 8.105022831050228
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2527290842133793,
+    "summary": "No orders to execute.",
+    "payload": {
+      "phase": "execution",
+      "mode": "paper",
+      "executed": false,
+      "reason": "empty_orders"
+    }
+  }
+]

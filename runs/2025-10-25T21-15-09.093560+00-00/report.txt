@@ -1,0 +1,17 @@
+Prompt: Build a SOL swing strategy that: 1) scans the past 90 minutes of news for negative shocks; 2) checks whether Solana chain TVL is rising on a 7-day basis; 3) only takes trades when realized volatility is below the 25th percentile; generate paper orders accordingly.
+Primary asset: SOL
+Assets: SOL
+Recommendation: neutral (score=0.154)
+
+Total runtime: 54.961s
+Phase timings:
+  - data_gather: 52.252s | selected: asknews_impact, tvl_growth | candidates: asknews_impact, tvl_growth | note: combined 2 tools
+  - feature_engineering: 2.708s | selected: volatility_percentile | candidates: tvl_growth, volatility_percentile
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+  - execution: 0.000s | selected: execution_adapter | candidates: execution_adapter
+Combined weights:
+  - asknews_impact: 0.270
+  - execution_adapter: 0.217
+  - volatility_percentile: 0.268
+  - tvl_growth: 0.245

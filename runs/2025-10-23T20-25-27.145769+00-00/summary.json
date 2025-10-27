@@ -1,0 +1,239 @@
+{
+  "prompt": "Trend-follow SOL with a 4h EMA cross and TVL filter",
+  "primary_asset": "SOL",
+  "assets": [
+    "SOL"
+  ],
+  "detected_keywords": [
+    "tvl",
+    "tvl filter"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "tvl_growth": [
+          "tvl",
+          "tvl filter"
+        ]
+      },
+      "matched_patterns": {},
+      "keyword_scores": {
+        "asknews_impact": 0.0,
+        "tvl_growth": 2.7665,
+        "volatility_percentile": 0.0,
+        "execution_adapter": 0.0
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 0.0,
+          "tvl_growth": 2.7665,
+          "volatility_percentile": 0.0,
+          "execution_adapter": 0.0
+        },
+        "blockchain": "solana"
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "combined_weights": {
+        "execution_adapter": 0.02635859600540106,
+        "asknews_impact": 0.17168751709297428,
+        "tvl_growth": 0.7509769434508123,
+        "volatility_percentile": 0.05097694345081235
+      },
+      "tool_ranking": [
+        "tvl_growth",
+        "asknews_impact",
+        "volatility_percentile",
+        "execution_adapter"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        },
+        {
+          "phase": "execution",
+          "tool": "execution_adapter"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "SOL"
+        ],
+        "primary_symbol": "SOL",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Trend-follow SOL with a 4h EMA cross and TVL filter",
+        "detected_keywords": [
+          "tvl",
+          "tvl filter"
+        ],
+        "router": {
+          "matched_terms": {
+            "tvl_growth": [
+              "tvl",
+              "tvl filter"
+            ]
+          },
+          "matched_patterns": {},
+          "keyword_scores": {
+            "asknews_impact": 0.0,
+            "tvl_growth": 2.7665,
+            "volatility_percentile": 0.0,
+            "execution_adapter": 0.0
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 0.0,
+              "tvl_growth": 2.7665,
+              "volatility_percentile": 0.0,
+              "execution_adapter": 0.0
+            },
+            "blockchain": "solana"
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "combined_weights": {
+            "execution_adapter": 0.02635859600540106,
+            "asknews_impact": 0.17168751709297428,
+            "tvl_growth": 0.7509769434508123,
+            "volatility_percentile": 0.05097694345081235
+          },
+          "tool_ranking": [
+            "tvl_growth",
+            "asknews_impact",
+            "volatility_percentile",
+            "execution_adapter"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            },
+            {
+              "phase": "execution",
+              "tool": "execution_adapter"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "SOL"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [
+            "ema",
+            "trend",
+            "tvl"
+          ],
+          "goals": [
+            "trend-follow"
+          ]
+        },
+        "options": {
+          "force_refresh": false
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "execution_adapter",
+          "tool_score": 0.02635859600540106
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "asknews_impact": {
+            "asset": "SOL",
+            "window_min": 90,
+            "result": null
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "execution_adapter": {
+            "phase": "execution",
+            "mode": "paper",
+            "executed": false,
+            "reason": "empty_orders"
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-23T20:25:27.139205",
+      "phases": [
+        {
+          "phase": "signal_generation",
+          "duration_sec": 8.99998121894896e-06,
+          "candidates": [
+            "asknews_impact"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "risk_sizing",
+          "duration_sec": 4.3000036384910345e-06,
+          "candidates": [
+            "volatility_percentile"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        }
+      ],
+      "alerts": [],
+      "total_duration_sec": 0.005776200006948784
+    }
+  },
+  "missing_tools": [],
+  "weights_before": {
+    "asknews_impact": 0.5722917236432475,
+    "volatility_percentile": 0.16992314483604115,
+    "tvl_growth": 0.16992314483604115,
+    "execution_adapter": 0.08786198668467018
+  },
+  "weights_after": {
+    "asknews_impact": 0.5663801002401495,
+    "volatility_percentile": 0.15602775558376702,
+    "tvl_growth": 0.15602775558376702,
+    "execution_adapter": 0.12156438859231648
+  },
+  "selection_weights": {
+    "asknews_impact": 0.823293317170652,
+    "execution_adapter": 0.176706682829348
+  },
+  "strategy_notes": [
+    "No actionable tool output for SOL; maintain neutral stance."
+  ],
+  "recommendation": "neutral",
+  "score": 0.0,
+  "phase_alerts": [],
+  "timestamp": "2025-10-23T20:25:27.145769+00:00"
+}

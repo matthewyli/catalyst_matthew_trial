@@ -1,0 +1,68 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "stub_data",
+    "weight": 0.6,
+    "summary": "stub_data ran",
+    "payload": {
+      "phase": "data_gather",
+      "tool": "stub_data",
+      "score": 0.6
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "stub_feature_b",
+    "weight": 0.3,
+    "summary": "stub_feature_b ran",
+    "payload": {
+      "phase": "feature_engineering",
+      "tool": "stub_feature_b",
+      "score": 0.3
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "stub_feature_a",
+    "weight": 0.7,
+    "summary": "stub_feature_a ran",
+    "payload": {
+      "phase": "feature_engineering",
+      "tool": "stub_feature_a",
+      "score": 0.7
+    }
+  },
+  {
+    "phase": "signal_generation",
+    "name": "stub_signal",
+    "weight": 0.5,
+    "summary": "stub_signal ran",
+    "payload": {
+      "phase": "signal_generation",
+      "tool": "stub_signal",
+      "score": 0.5
+    }
+  },
+  {
+    "phase": "risk_sizing",
+    "name": "stub_risk",
+    "weight": 0.4,
+    "summary": "stub_risk ran",
+    "payload": {
+      "phase": "risk_sizing",
+      "tool": "stub_risk",
+      "score": 0.4
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "stub_execution",
+    "weight": 0.2,
+    "summary": "stub_execution ran",
+    "payload": {
+      "phase": "execution",
+      "tool": "stub_execution",
+      "score": 0.2
+    }
+  }
+]

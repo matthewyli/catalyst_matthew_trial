@@ -1,0 +1,350 @@
+{
+  "prompt": "Design a hedge strategy for a diversified crypto portfolio when macro sentiment deteriorates and drawdown breaches 10%.",
+  "primary_asset": "BTC",
+  "assets": [
+    "BTC"
+  ],
+  "detected_keywords": [
+    "sentiment"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "asknews_impact": [
+          "sentiment"
+        ]
+      },
+      "matched_patterns": {},
+      "keyword_scores": {
+        "asknews_impact": 1.195,
+        "tvl_growth": 0.0,
+        "volatility_percentile": 0.0,
+        "execution_adapter": 0.0
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 1.195,
+          "tvl_growth": 0.0,
+          "volatility_percentile": 0.0,
+          "execution_adapter": 0.0
+        }
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "combined_weights": {
+        "volatility_percentile": 0.04011237271397034,
+        "execution_adapter": 0.07750187971016033,
+        "tvl_growth": 0.06042274763691673,
+        "asknews_impact": 0.8219629999389526
+      },
+      "tool_ranking": [
+        "asknews_impact",
+        "execution_adapter",
+        "tvl_growth",
+        "volatility_percentile"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        },
+        {
+          "phase": "data_gather",
+          "tool": "tvl_growth"
+        },
+        {
+          "phase": "execution",
+          "tool": "execution_adapter"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "BTC"
+        ],
+        "primary_symbol": "BTC",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Design a hedge strategy for a diversified crypto portfolio when macro sentiment deteriorates and drawdown breaches 10%.",
+        "detected_keywords": [
+          "sentiment"
+        ],
+        "router": {
+          "matched_terms": {
+            "asknews_impact": [
+              "sentiment"
+            ]
+          },
+          "matched_patterns": {},
+          "keyword_scores": {
+            "asknews_impact": 1.195,
+            "tvl_growth": 0.0,
+            "volatility_percentile": 0.0,
+            "execution_adapter": 0.0
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 1.195,
+              "tvl_growth": 0.0,
+              "volatility_percentile": 0.0,
+              "execution_adapter": 0.0
+            }
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "combined_weights": {
+            "volatility_percentile": 0.04011237271397034,
+            "execution_adapter": 0.07750187971016033,
+            "tvl_growth": 0.06042274763691673,
+            "asknews_impact": 0.8219629999389526
+          },
+          "tool_ranking": [
+            "asknews_impact",
+            "execution_adapter",
+            "tvl_growth",
+            "volatility_percentile"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            },
+            {
+              "phase": "data_gather",
+              "tool": "tvl_growth"
+            },
+            {
+              "phase": "execution",
+              "tool": "execution_adapter"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "BTC"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [
+            "rsi",
+            "sentiment"
+          ],
+          "goals": [
+            "hedge"
+          ]
+        },
+        "options": {
+          "force_refresh": false
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "execution_adapter",
+          "tool_score": 0.07750187971016033
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "asknews_impact": {
+            "asset": "BTC",
+            "window_min": 90,
+            "impact_score": 0.1495,
+            "direction": "up",
+            "confidence": 0.145,
+            "n_articles": 2,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 1.0,
+              "novelty": 1.0,
+              "source_quality": 0.6,
+              "entity_match": 1.0,
+              "time_decay": 0.5041
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 75 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in Bitcoin include a significant upgrade to the Lightning Network, enhancing transaction efficiency. However, a security vulnerability in a popular wallet and a trading halt by a major exchange raise concerns. Additionally, rumors of a new regulatory framework could influence market sentiment positively."
+          },
+          "tvl_growth": {
+            "metric": "defi_total",
+            "latest_tvl": 284231612967.0,
+            "pct_changes": {
+              "change_1d": 0.0,
+              "change_7d": 0.0206,
+              "change_30d": -0.0394,
+              "change_90d": 0.0538
+            },
+            "trailing_ratio": -0.0456
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "execution_adapter": {
+            "phase": "execution",
+            "mode": "paper",
+            "executed": false,
+            "reason": "empty_orders"
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-24T19:10:23.405458",
+      "phases": [
+        {
+          "phase": "signal_generation",
+          "duration_sec": 1.1599971912801266e-05,
+          "candidates": [
+            "asknews_impact"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "risk_sizing",
+          "duration_sec": 3.300025127828121e-06,
+          "candidates": [
+            "volatility_percentile"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        }
+      ],
+      "alerts": [],
+      "total_duration_sec": 40.79771899996558
+    }
+  },
+  "missing_tools": [],
+  "tool_runs": [
+    {
+      "phase": "data_gather",
+      "name": "asknews_impact",
+      "weight": 0.40654333312984203,
+      "summary": "BTC news impact 0.15 (up, confidence 14.50%) from 2 articles.",
+      "payload": {
+        "asset": "BTC",
+        "window_min": 90,
+        "impact_score": 0.1495,
+        "direction": "up",
+        "confidence": 0.145,
+        "n_articles": 2,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 1.0,
+          "novelty": 1.0,
+          "source_quality": 0.6,
+          "entity_match": 1.0,
+          "time_decay": 0.5041
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Technological Advancements",
+          "Average source quality 0.60",
+          "Fresh within 75 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments in Bitcoin include a significant upgrade to the Lightning Network, enhancing transaction efficiency. However, a security vulnerability in a popular wallet and a trading halt by a major exchange raise concerns. Additionally, rumors of a new regulatory framework could influence market sentiment positively."
+      }
+    },
+    {
+      "phase": "data_gather",
+      "name": "tvl_growth",
+      "weight": 0.2014091587897224,
+      "summary": "defi_total TVL 284,231,612,967 USD | avg momentum 0.88% (1d/7d/30d change: 1D=0.00%, 7D=2.06%, 30D=-3.94%)",
+      "payload": {
+        "metric": "defi_total",
+        "latest_tvl": 284231612967.0,
+        "pct_changes": {
+          "change_1d": 0.0,
+          "change_7d": 0.0206,
+          "change_30d": -0.0394,
+          "change_90d": 0.0538
+        },
+        "trailing_ratio": -0.0456
+      }
+    },
+    {
+      "phase": "feature_engineering",
+      "name": "volatility_percentile",
+      "weight": 0.1337079090465678,
+      "summary": "volatility_percentile failed: Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}",
+      "payload": {
+        "error": "Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}"
+      }
+    },
+    {
+      "phase": "execution",
+      "name": "execution_adapter",
+      "weight": 0.2583395990338677,
+      "summary": "No orders to execute.",
+      "payload": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  ],
+  "weights_before": {
+    "execution_adapter": 0.2583395990338677,
+    "tvl_growth": 0.2014091587897224,
+    "volatility_percentile": 0.1337079090465678,
+    "asknews_impact": 0.40654333312984203
+  },
+  "weights_after": {
+    "execution_adapter": 0.2638214589330414,
+    "tvl_growth": 0.21105249564869732,
+    "volatility_percentile": 0.12393418552617548,
+    "asknews_impact": 0.40119185989208583
+  },
+  "selection_weights": {
+    "asknews_impact": 0.4579471693380096,
+    "tvl_growth": 0.2409094067612465,
+    "execution_adapter": 0.3011434239007439
+  },
+  "strategy_notes": [
+    "News: impact 0.15 up (confidence 14%).",
+    "TVL: 7d change 2.06%."
+  ],
+  "recommendation": "neutral",
+  "score": 0.0206,
+  "phase_alerts": [],
+  "timestamp": "2025-10-24T19:11:04.204309+00:00"
+}

@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.32414108098155603,
+    "summary": "SOL news impact 0.18 (up, confidence 17.50%) from 4 articles.",
+    "payload": {
+      "value": 0.184,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.184,
+        "direction": "up",
+        "confidence": 0.175,
+        "n_articles": 4,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.4574,
+          "novelty": 1.0,
+          "source_quality": 0.6,
+          "entity_match": 0.8575,
+          "time_decay": 0.5997
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Market Adoption",
+          "Average source quality 0.60",
+          "Fresh within 60 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments surrounding Solana include a minor security breach that was contained without loss of funds, a strategic partnership with a major financial institution, and an upcoming regulatory review of its compliance with new crypto laws. Additionally, Solana's Layer 2 scaling solution is nearing completion, which could enhance its transaction capabilities. These factors present a mixed outlook for SOL, with potential short-term catalysts and risks."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.23090102154837908,
+    "summary": "chain:Solana TVL 24,241,638,164 USD | avg momentum 2.19% (1d/7d/30d change: 1D=1.94%, 7D=5.99%, 30D=-7.98%)",
+    "payload": {
+      "value": 0.021909505889017966,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24241638164.0,
+        "pct_changes": {
+          "change_1d": 0.0194,
+          "change_7d": 0.0599,
+          "change_30d": -0.0798,
+          "change_90d": 0.0882
+        },
+        "trailing_ratio": -0.0542
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.52), tvl_growth(0.48)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.524309018248224
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.475690981751776
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.10689501372371647
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.184,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.184,
+            "direction": "up",
+            "confidence": 0.175,
+            "n_articles": 4,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.4574,
+              "novelty": 1.0,
+              "source_quality": 0.6,
+              "entity_match": 0.8575,
+              "time_decay": 0.5997
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Market Adoption",
+              "Average source quality 0.60",
+              "Fresh within 60 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments surrounding Solana include a minor security breach that was contained without loss of funds, a strategic partnership with a major financial institution, and an upcoming regulatory review of its compliance with new crypto laws. Additionally, Solana's Layer 2 scaling solution is nearing completion, which could enhance its transaction capabilities. These factors present a mixed outlook for SOL, with potential short-term catalysts and risks."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.021909505889017966,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24241638164.0,
+            "pct_changes": {
+              "change_1d": 0.0194,
+              "change_7d": 0.0599,
+              "change_30d": -0.0798,
+              "change_90d": 0.0882
+            },
+            "trailing_ratio": -0.0542
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.18818016547596625,
+    "summary": "SOL volatility ~9.0th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.41021506618302217,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.3126811830201068,
+            "pctile": 10.273972602739725,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.39958991065483057,
+            "pctile": 12.636986301369863,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.33109626820711663,
+            "pctile": 1.5981735159817352,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 8.978493381697781,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.16876905977722387,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.8818493150684932,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 10.273972602739725,
+        "pctile_14d": 12.636986301369863,
+        "pctile_30d": 1.5981735159817352
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2567777319940986,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

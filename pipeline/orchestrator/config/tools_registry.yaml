@@ -1,0 +1,16 @@
+tools:
+  - name: asknews_impact
+    module: catalyst_matthew_trial.tools.asknews_tool
+    object: AskNewsImpactTool
+    enabled: true
+    phases: [data_gather, signal_generation]
+  - name: tvl_growth
+    module: catalyst_matthew_trial.tools.tvl_tool
+    object: TVLGrowthTool
+    enabled: true
+    phases: [data_gather, feature_engineering]
+  - name: volatility_percentile
+    module: catalyst_matthew_trial.tools.volatility_tool
+    object: VolatilityPercentileTool
+    enabled: true
+    phases: [feature_engineering, risk_sizing]

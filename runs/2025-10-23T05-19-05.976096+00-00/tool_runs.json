@@ -1,0 +1,38 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.22162970319813804,
+    "summary": "tvl_growth failed: TVLGrowthTool requires pandas (install via 'pip install pandas').",
+    "payload": {
+      "error": "TVLGrowthTool requires pandas (install via 'pip install pandas')."
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.5567405936037239,
+    "summary": "No high-impact news found for SOL in the last 90 minutes.",
+    "payload": {
+      "asset": "SOL",
+      "window_min": 90,
+      "result": null
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.22162970319813804,
+    "summary": "volatility_percentile failed: vol_pctile (and dependencies pandas, numpy, requests) is required for volatility analysis.",
+    "payload": {
+      "error": "vol_pctile (and dependencies pandas, numpy, requests) is required for volatility analysis."
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "ALERT:execution",
+    "weight": 0.0,
+    "summary": "ALERT: need execution tool",
+    "payload": null
+  }
+]

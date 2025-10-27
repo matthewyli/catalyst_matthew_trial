@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.25284873945183334,
+    "summary": "SOL news impact 0.26 (up, confidence 24.12%) from 5 articles.",
+    "payload": {
+      "value": 0.2602,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.2602,
+        "direction": "up",
+        "confidence": 0.2412,
+        "n_articles": 5,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.6844,
+          "novelty": 0.8996,
+          "source_quality": 0.6,
+          "entity_match": 0.9001,
+          "time_decay": 0.6533
+        },
+        "top_reasons": [
+          "Highest-impact article tagged metrics",
+          "Average source quality 0.60",
+          "Fresh within 30 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments in the Solana ecosystem include a minor exploit that has been patched, a new partnership aimed at enhancing DeFi solutions, the announcement of a Layer 2 solution for improved scalability, and a new exchange listing in Asia. Additionally, Solana is complying with new EU crypto regulations, which may impact its operations in Europe. These factors present both opportunities and risks for SOL in the near term."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24926615564968124,
+    "summary": "chain:Solana TVL 25,333,970,139 USD | avg momentum 6.63% (1d/7d/30d change: 1D=5.33%, 7D=8.28%, 30D=-1.48%)",
+    "payload": {
+      "value": 0.06628085346667677,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 25333970139.0,
+        "pct_changes": {
+          "change_1d": 0.0533,
+          "change_7d": 0.0828,
+          "change_30d": -0.0148,
+          "change_90d": 0.1439
+        },
+        "trailing_ratio": -0.0104
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.573343184321817
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.426656815678183
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.17746307444106132
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.2602,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.2602,
+            "direction": "up",
+            "confidence": 0.2412,
+            "n_articles": 5,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.6844,
+              "novelty": 0.8996,
+              "source_quality": 0.6,
+              "entity_match": 0.9001,
+              "time_decay": 0.6533
+            },
+            "top_reasons": [
+              "Highest-impact article tagged metrics",
+              "Average source quality 0.60",
+              "Fresh within 30 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in the Solana ecosystem include a minor exploit that has been patched, a new partnership aimed at enhancing DeFi solutions, the announcement of a Layer 2 solution for improved scalability, and a new exchange listing in Asia. Additionally, Solana is complying with new EU crypto regulations, which may impact its operations in Europe. These factors present both opportunities and risks for SOL in the near term."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.06628085346667677,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 25333970139.0,
+            "pct_changes": {
+              "change_1d": 0.0533,
+              "change_7d": 0.0828,
+              "change_30d": -0.0148,
+              "change_90d": 0.1439
+            },
+            "trailing_ratio": -0.0104
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.24762468257566633,
+    "summary": "SOL volatility ~23.9th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.2607761062946191,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.5244211508471733,
+            "pctile": 40.36529680365297,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.44218384385920756,
+            "pctile": 19.052511415525114,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.3671385182391664,
+            "pctile": 3.458904109589041,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 23.922389370538088,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.11931843161922519,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.22031963470319638,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 40.36529680365297,
+        "pctile_14d": 19.052511415525114,
+        "pctile_30d": 3.458904109589041
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2502604223228191,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

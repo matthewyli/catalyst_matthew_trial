@@ -1,0 +1,446 @@
+{
+  "prompt": "Breakout play on ARB with volume expansion, risk sizing per max 3% drawdown, and prepare execution instructions.",
+  "primary_asset": "ARB",
+  "assets": [
+    "ARB"
+  ],
+  "detected_keywords": [
+    "execution",
+    "vol"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "volatility_percentile": [
+          "vol"
+        ],
+        "execution_adapter": [
+          "execution"
+        ]
+      },
+      "matched_patterns": {},
+      "keyword_scores": {
+        "asknews_impact": 0.0,
+        "tvl_growth": 0.0,
+        "volatility_percentile": 1.165,
+        "execution_adapter": 1.195
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 0.0,
+          "tvl_growth": 0.0,
+          "volatility_percentile": 1.165,
+          "execution_adapter": 1.195
+        },
+        "blockchain": "arbitrum"
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "combined_weights": {
+        "volatility_percentile": 0.38273110311547975,
+        "execution_adapter": 0.43359559022228533,
+        "tvl_growth": 0.06331574869460921,
+        "asknews_impact": 0.12035755796762576
+      },
+      "tool_ranking": [
+        "execution_adapter",
+        "volatility_percentile",
+        "asknews_impact",
+        "tvl_growth"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        },
+        {
+          "phase": "data_gather",
+          "tool": "tvl_growth"
+        },
+        {
+          "phase": "feature_engineering",
+          "tool": "volatility_percentile"
+        },
+        {
+          "phase": "execution",
+          "tool": "execution_adapter"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "ARB"
+        ],
+        "primary_symbol": "ARB",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Breakout play on ARB with volume expansion, risk sizing per max 3% drawdown, and prepare execution instructions.",
+        "detected_keywords": [
+          "execution",
+          "vol"
+        ],
+        "router": {
+          "matched_terms": {
+            "volatility_percentile": [
+              "vol"
+            ],
+            "execution_adapter": [
+              "execution"
+            ]
+          },
+          "matched_patterns": {},
+          "keyword_scores": {
+            "asknews_impact": 0.0,
+            "tvl_growth": 0.0,
+            "volatility_percentile": 1.165,
+            "execution_adapter": 1.195
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 0.0,
+              "tvl_growth": 0.0,
+              "volatility_percentile": 1.165,
+              "execution_adapter": 1.195
+            },
+            "blockchain": "arbitrum"
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "combined_weights": {
+            "volatility_percentile": 0.38273110311547975,
+            "execution_adapter": 0.43359559022228533,
+            "tvl_growth": 0.06331574869460921,
+            "asknews_impact": 0.12035755796762576
+          },
+          "tool_ranking": [
+            "execution_adapter",
+            "volatility_percentile",
+            "asknews_impact",
+            "tvl_growth"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            },
+            {
+              "phase": "data_gather",
+              "tool": "tvl_growth"
+            },
+            {
+              "phase": "feature_engineering",
+              "tool": "volatility_percentile"
+            },
+            {
+              "phase": "execution",
+              "tool": "execution_adapter"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "ARB"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [],
+          "goals": []
+        },
+        "options": {
+          "force_refresh": false
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "execution_adapter",
+          "tool_score": 0.43359559022228533
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "asknews_impact": {
+            "asset": "ARB",
+            "window_min": 90,
+            "impact_score": 0.208,
+            "direction": "up",
+            "confidence": 0.1969,
+            "n_articles": 5,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.8636,
+              "novelty": 0.9843,
+              "source_quality": 0.6,
+              "entity_match": 0.8457,
+              "time_decay": 0.5809
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Arbitrum's ARB token has recently launched on major exchanges, enhancing its market presence. A strategic partnership with a leading DeFi protocol aims to bolster its Layer 2 ecosystem. However, a minor vulnerability has been identified, and new regulatory guidelines for Layer 2 tokens could impact ARB's compliance landscape. A major protocol upgrade is also on the horizon, promising improved scalability."
+          },
+          "tvl_growth": {
+            "metric": "chain:Arbitrum",
+            "latest_tvl": 6105391259.0,
+            "pct_changes": {
+              "change_1d": 0.0,
+              "change_7d": 0.0384,
+              "change_30d": 0.3315,
+              "change_90d": 0.7551
+            },
+            "trailing_ratio": 0.0673
+          }
+        },
+        "feature_engineering": {
+          "volatility_percentile": {
+            "asset": "ARB",
+            "windows": [
+              7,
+              14,
+              30
+            ],
+            "results": [
+              {
+                "w": 7,
+                "realized_vol": 0.6144112920973772,
+                "pctile": 36.9406392694064,
+                "confidence": 1.0
+              },
+              {
+                "w": 14,
+                "realized_vol": 0.5102839338943123,
+                "pctile": 16.038812785388128,
+                "confidence": 1.0
+              },
+              {
+                "w": 30,
+                "realized_vol": 0.4831757055007673,
+                "pctile": 6.929223744292237,
+                "confidence": 1.0
+              }
+            ],
+            "vol_percentile": 22.325087235672505,
+            "vol_percentile_conf": 1.0,
+            "confidence_scalar": 0.14806855572325794,
+            "confidence_components": {
+              "c1": 0.002915013598822267,
+              "c2": 1.0,
+              "c3": 0.5445205479452054,
+              "c4": 0.9667974193322912
+            },
+            "mobula_key_present": false,
+            "pctile_7d": 36.9406392694064,
+            "pctile_14d": 16.038812785388128,
+            "pctile_30d": 6.929223744292237
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "execution_adapter": {
+            "phase": "execution",
+            "mode": "paper",
+            "executed": false,
+            "reason": "empty_orders"
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-24T19:11:04.207531",
+      "phases": [
+        {
+          "phase": "signal_generation",
+          "duration_sec": 9.000010322779417e-06,
+          "candidates": [
+            "asknews_impact"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "risk_sizing",
+          "duration_sec": 3.00002284348011e-06,
+          "candidates": [
+            "volatility_percentile"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        }
+      ],
+      "alerts": [],
+      "total_duration_sec": 65.14462559996173
+    }
+  },
+  "missing_tools": [],
+  "tool_runs": [
+    {
+      "phase": "data_gather",
+      "name": "asknews_impact",
+      "weight": 0.40119185989208583,
+      "summary": "ARB news impact 0.21 (up, confidence 19.69%) from 5 articles.",
+      "payload": {
+        "asset": "ARB",
+        "window_min": 90,
+        "impact_score": 0.208,
+        "direction": "up",
+        "confidence": 0.1969,
+        "n_articles": 5,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.8636,
+          "novelty": 0.9843,
+          "source_quality": 0.6,
+          "entity_match": 0.8457,
+          "time_decay": 0.5809
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Technological Advancements",
+          "Average source quality 0.60",
+          "Fresh within 45 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Arbitrum's ARB token has recently launched on major exchanges, enhancing its market presence. A strategic partnership with a leading DeFi protocol aims to bolster its Layer 2 ecosystem. However, a minor vulnerability has been identified, and new regulatory guidelines for Layer 2 tokens could impact ARB's compliance landscape. A major protocol upgrade is also on the horizon, promising improved scalability."
+      }
+    },
+    {
+      "phase": "data_gather",
+      "name": "tvl_growth",
+      "weight": 0.21105249564869732,
+      "summary": "chain:Arbitrum TVL 6,105,391,259 USD | avg momentum 28.13% (1d/7d/30d change: 1D=0.00%, 7D=3.84%, 30D=33.15%)",
+      "payload": {
+        "metric": "chain:Arbitrum",
+        "latest_tvl": 6105391259.0,
+        "pct_changes": {
+          "change_1d": 0.0,
+          "change_7d": 0.0384,
+          "change_30d": 0.3315,
+          "change_90d": 0.7551
+        },
+        "trailing_ratio": 0.0673
+      }
+    },
+    {
+      "phase": "feature_engineering",
+      "name": "volatility_percentile",
+      "weight": 0.1239341855261755,
+      "summary": "ARB volatility ~22.3th percentile (confidence 100%)",
+      "payload": {
+        "asset": "ARB",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.6144112920973772,
+            "pctile": 36.9406392694064,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.5102839338943123,
+            "pctile": 16.038812785388128,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.4831757055007673,
+            "pctile": 6.929223744292237,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 22.325087235672505,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.14806855572325794,
+        "confidence_components": {
+          "c1": 0.002915013598822267,
+          "c2": 1.0,
+          "c3": 0.5445205479452054,
+          "c4": 0.9667974193322912
+        },
+        "mobula_key_present": false,
+        "pctile_7d": 36.9406392694064,
+        "pctile_14d": 16.038812785388128,
+        "pctile_30d": 6.929223744292237
+      }
+    },
+    {
+      "phase": "execution",
+      "name": "execution_adapter",
+      "weight": 0.26382145893304143,
+      "summary": "No orders to execute.",
+      "payload": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  ],
+  "weights_before": {
+    "execution_adapter": 0.26382145893304143,
+    "tvl_growth": 0.21105249564869732,
+    "volatility_percentile": 0.1239341855261755,
+    "asknews_impact": 0.40119185989208583
+  },
+  "weights_after": {
+    "execution_adapter": 0.2625934194092836,
+    "tvl_growth": 0.21451298957533982,
+    "volatility_percentile": 0.13513515957085317,
+    "asknews_impact": 0.38775843144452343
+  },
+  "selection_weights": {
+    "asknews_impact": 0.3877584314445234,
+    "tvl_growth": 0.21451298957533982,
+    "volatility_percentile": 0.13513515957085315,
+    "execution_adapter": 0.2625934194092836
+  },
+  "strategy_notes": [
+    "News: impact 0.21 up (confidence 20%).",
+    "TVL: 7d change 3.84%.",
+    "Volatility: percentile 22.3 (lower => quieter)."
+  ],
+  "recommendation": "neutral",
+  "score": 0.17677456382163748,
+  "phase_alerts": [],
+  "timestamp": "2025-10-24T19:12:09.352950+00:00"
+}

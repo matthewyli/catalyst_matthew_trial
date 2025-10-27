@@ -1,0 +1,446 @@
+{
+  "prompt": "Detect cross-exchange arbitrage opportunities on ETH with liquidity and TVL confirmation.",
+  "primary_asset": "ETH",
+  "assets": [
+    "ETH"
+  ],
+  "detected_keywords": [
+    "liquidity",
+    "tvl"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "tvl_growth": [
+          "tvl",
+          "liquidity"
+        ]
+      },
+      "matched_patterns": {},
+      "keyword_scores": {
+        "asknews_impact": 0.0,
+        "tvl_growth": 2.596,
+        "volatility_percentile": 0.0,
+        "execution_adapter": 0.0
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 0.0,
+          "tvl_growth": 2.596,
+          "volatility_percentile": 0.0,
+          "execution_adapter": 0.0
+        },
+        "blockchain": "ethereum"
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "combined_weights": {
+        "volatility_percentile": 0.03601439297874974,
+        "execution_adapter": 0.07779575616865776,
+        "tvl_growth": 0.7587104705511364,
+        "asknews_impact": 0.12747938030145614
+      },
+      "tool_ranking": [
+        "tvl_growth",
+        "asknews_impact",
+        "execution_adapter",
+        "volatility_percentile"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "tvl_growth"
+        },
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        },
+        {
+          "phase": "feature_engineering",
+          "tool": "volatility_percentile"
+        },
+        {
+          "phase": "execution",
+          "tool": "execution_adapter"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "ETH"
+        ],
+        "primary_symbol": "ETH",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Detect cross-exchange arbitrage opportunities on ETH with liquidity and TVL confirmation.",
+        "detected_keywords": [
+          "liquidity",
+          "tvl"
+        ],
+        "router": {
+          "matched_terms": {
+            "tvl_growth": [
+              "tvl",
+              "liquidity"
+            ]
+          },
+          "matched_patterns": {},
+          "keyword_scores": {
+            "asknews_impact": 0.0,
+            "tvl_growth": 2.596,
+            "volatility_percentile": 0.0,
+            "execution_adapter": 0.0
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 0.0,
+              "tvl_growth": 2.596,
+              "volatility_percentile": 0.0,
+              "execution_adapter": 0.0
+            },
+            "blockchain": "ethereum"
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "combined_weights": {
+            "volatility_percentile": 0.03601439297874974,
+            "execution_adapter": 0.07779575616865776,
+            "tvl_growth": 0.7587104705511364,
+            "asknews_impact": 0.12747938030145614
+          },
+          "tool_ranking": [
+            "tvl_growth",
+            "asknews_impact",
+            "execution_adapter",
+            "volatility_percentile"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "tvl_growth"
+            },
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            },
+            {
+              "phase": "feature_engineering",
+              "tool": "volatility_percentile"
+            },
+            {
+              "phase": "execution",
+              "tool": "execution_adapter"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "ETH"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [
+            "tvl"
+          ],
+          "goals": [
+            "arbitrage"
+          ]
+        },
+        "options": {
+          "force_refresh": false
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "execution_adapter",
+          "tool_score": 0.07779575616865776
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "tvl_growth": {
+            "metric": "chain:Ethereum",
+            "latest_tvl": 177936343481.0,
+            "pct_changes": {
+              "change_1d": 0.0,
+              "change_7d": 0.0186,
+              "change_30d": -0.0822,
+              "change_90d": -0.0207
+            },
+            "trailing_ratio": -0.0449
+          },
+          "asknews_impact": {
+            "asset": "ETH",
+            "window_min": 90,
+            "impact_score": 0.3459,
+            "direction": "up",
+            "confidence": 0.3135,
+            "n_articles": 5,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.0818,
+              "novelty": 0.9047,
+              "source_quality": 0.6,
+              "entity_match": 1.0,
+              "time_decay": 0.6187
+            },
+            "top_reasons": [
+              "Highest-impact article tagged metrics",
+              "Average source quality 0.60",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in the Ethereum ecosystem include a major upgrade from Optimism aimed at improving transaction efficiency, a new security exploit affecting a Layer 2 solution, proposed SEC regulations impacting Ethereum exchanges, a new token listing on Coinbase, and a strategic partnership to enhance blockchain solutions. These events highlight both opportunities and risks within the Ethereum landscape."
+          }
+        },
+        "feature_engineering": {
+          "volatility_percentile": {
+            "asset": "ETH",
+            "windows": [
+              7,
+              14,
+              30
+            ],
+            "results": [
+              {
+                "w": 7,
+                "realized_vol": 2.6559761833988533,
+                "pctile": 74.43679599499374,
+                "confidence": 0.36484018264840185
+              },
+              {
+                "w": 14,
+                "realized_vol": 1.9289418132394218,
+                "pctile": 55.5032925682032,
+                "confidence": 0.36404109589041095
+              },
+              {
+                "w": 30,
+                "realized_vol": 2.8165446892417068,
+                "pctile": 61.8657421998109,
+                "confidence": 0.3622146118721461
+              }
+            ],
+            "vol_percentile": 64.77935128241616,
+            "vol_percentile_conf": 0.363920363474345,
+            "confidence_scalar": 0.11371871486969298,
+            "confidence_components": {
+              "c1": 0.0009993262968785088,
+              "c2": 1.0,
+              "c3": 0.6818775184196149,
+              "c4": 0.9715513885617608
+            },
+            "mobula_key_present": false,
+            "pctile_7d": 74.43679599499374,
+            "pctile_14d": 55.5032925682032,
+            "pctile_30d": 61.8657421998109
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "execution_adapter": {
+            "phase": "execution",
+            "mode": "paper",
+            "executed": false,
+            "reason": "empty_orders"
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-24T19:09:18.264634",
+      "phases": [
+        {
+          "phase": "signal_generation",
+          "duration_sec": 9.800016414374113e-06,
+          "candidates": [
+            "asknews_impact"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "risk_sizing",
+          "duration_sec": 3.0999653972685337e-06,
+          "candidates": [
+            "volatility_percentile"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        }
+      ],
+      "alerts": [],
+      "total_duration_sec": 65.13557400001446
+    }
+  },
+  "missing_tools": [],
+  "tool_runs": [
+    {
+      "phase": "data_gather",
+      "name": "tvl_growth",
+      "weight": 0.19570156850378806,
+      "summary": "chain:Ethereum TVL 177,936,343,481 USD | avg momentum -2.11% (1d/7d/30d change: 1D=0.00%, 7D=1.86%, 30D=-8.22%)",
+      "payload": {
+        "metric": "chain:Ethereum",
+        "latest_tvl": 177936343481.0,
+        "pct_changes": {
+          "change_1d": 0.0,
+          "change_7d": 0.0186,
+          "change_30d": -0.0822,
+          "change_90d": -0.0207
+        },
+        "trailing_ratio": -0.0449
+      }
+    },
+    {
+      "phase": "data_gather",
+      "name": "asknews_impact",
+      "weight": 0.42493126767152034,
+      "summary": "ETH news impact 0.35 (up, confidence 31.35%) from 5 articles.",
+      "payload": {
+        "asset": "ETH",
+        "window_min": 90,
+        "impact_score": 0.3459,
+        "direction": "up",
+        "confidence": 0.3135,
+        "n_articles": 5,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.0818,
+          "novelty": 0.9047,
+          "source_quality": 0.6,
+          "entity_match": 1.0,
+          "time_decay": 0.6187
+        },
+        "top_reasons": [
+          "Highest-impact article tagged metrics",
+          "Average source quality 0.60",
+          "Fresh within 45 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments in the Ethereum ecosystem include a major upgrade from Optimism aimed at improving transaction efficiency, a new security exploit affecting a Layer 2 solution, proposed SEC regulations impacting Ethereum exchanges, a new token listing on Coinbase, and a strategic partnership to enhance blockchain solutions. These events highlight both opportunities and risks within the Ethereum landscape."
+      }
+    },
+    {
+      "phase": "feature_engineering",
+      "name": "volatility_percentile",
+      "weight": 0.12004797659583243,
+      "summary": "ETH volatility ~64.8th percentile (confidence 36%)",
+      "payload": {
+        "asset": "ETH",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 2.6559761833988533,
+            "pctile": 74.43679599499374,
+            "confidence": 0.36484018264840185
+          },
+          {
+            "w": 14,
+            "realized_vol": 1.9289418132394218,
+            "pctile": 55.5032925682032,
+            "confidence": 0.36404109589041095
+          },
+          {
+            "w": 30,
+            "realized_vol": 2.8165446892417068,
+            "pctile": 61.8657421998109,
+            "confidence": 0.3622146118721461
+          }
+        ],
+        "vol_percentile": 64.77935128241616,
+        "vol_percentile_conf": 0.363920363474345,
+        "confidence_scalar": 0.11371871486969298,
+        "confidence_components": {
+          "c1": 0.0009993262968785088,
+          "c2": 1.0,
+          "c3": 0.6818775184196149,
+          "c4": 0.9715513885617608
+        },
+        "mobula_key_present": false,
+        "pctile_7d": 74.43679599499374,
+        "pctile_14d": 55.5032925682032,
+        "pctile_30d": 61.8657421998109
+      }
+    },
+    {
+      "phase": "execution",
+      "name": "execution_adapter",
+      "weight": 0.2593191872288591,
+      "summary": "No orders to execute.",
+      "payload": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  ],
+  "weights_before": {
+    "execution_adapter": 0.2593191872288591,
+    "tvl_growth": 0.19570156850378806,
+    "volatility_percentile": 0.12004797659583243,
+    "asknews_impact": 0.42493126767152034
+  },
+  "weights_after": {
+    "execution_adapter": 0.25833959903386766,
+    "tvl_growth": 0.2014091587897224,
+    "volatility_percentile": 0.13370790904656782,
+    "asknews_impact": 0.40654333312984203
+  },
+  "selection_weights": {
+    "tvl_growth": 0.20140915878972243,
+    "asknews_impact": 0.4065433331298421,
+    "volatility_percentile": 0.13370790904656782,
+    "execution_adapter": 0.2583395990338677
+  },
+  "strategy_notes": [
+    "TVL: 7d change 1.86%.",
+    "News: impact 0.35 up (confidence 31%).",
+    "Volatility: percentile 64.8 (lower => quieter)."
+  ],
+  "recommendation": "neutral",
+  "score": -0.055296756412080796,
+  "phase_alerts": [],
+  "timestamp": "2025-10-24T19:10:23.401132+00:00"
+}

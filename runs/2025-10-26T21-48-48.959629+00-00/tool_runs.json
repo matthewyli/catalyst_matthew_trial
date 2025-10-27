@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.25671160607210114,
+    "summary": "SOL news impact 0.12 (up, confidence 11.27%) from 3 articles.",
+    "payload": {
+      "value": 0.1163,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.1163,
+        "direction": "up",
+        "confidence": 0.1127,
+        "n_articles": 3,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 1.0,
+          "novelty": 0.9744,
+          "source_quality": 0.6,
+          "entity_match": 0.7071,
+          "time_decay": 0.4543
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Market Adoption",
+          "Average source quality 0.60",
+          "Fresh within 110 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments for Solana include a minor exploit that was quickly patched, a new listing on a major Asian exchange, a strategic partnership with a DeFi platform, and regulatory clarity in Europe that may boost institutional interest. These factors present a mixed outlook for SOL, with both positive and negative sentiments influencing its market position."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24827106891281073,
+    "summary": "chain:Solana TVL 24,812,783,012 USD | avg momentum 4.74% (1d/7d/30d change: 1D=2.82%, 7D=6.33%, 30D=1.12%)",
+    "payload": {
+      "value": 0.04743273347286396,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24812783012.0,
+        "pct_changes": {
+          "change_1d": 0.0282,
+          "change_7d": 0.0633,
+          "change_30d": 0.0112,
+          "change_90d": 0.0871
+        },
+        "trailing_ratio": -0.0321
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.574427913984301
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.425572086015699
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.0869920137258476
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.1163,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.1163,
+            "direction": "up",
+            "confidence": 0.1127,
+            "n_articles": 3,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 1.0,
+              "novelty": 0.9744,
+              "source_quality": 0.6,
+              "entity_match": 0.7071,
+              "time_decay": 0.4543
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Market Adoption",
+              "Average source quality 0.60",
+              "Fresh within 110 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments for Solana include a minor exploit that was quickly patched, a new listing on a major Asian exchange, a strategic partnership with a DeFi platform, and regulatory clarity in Europe that may boost institutional interest. These factors present a mixed outlook for SOL, with both positive and negative sentiments influencing its market position."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04743273347286396,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24812783012.0,
+            "pct_changes": {
+              "change_1d": 0.0282,
+              "change_7d": 0.0633,
+              "change_30d": 0.0112,
+              "change_90d": 0.0871
+            },
+            "trailing_ratio": -0.0321
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.2444037722235125,
+    "summary": "SOL volatility ~2.5th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.4751789825031381,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.1849931464553498,
+            "pctile": 1.1187214611872145,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.3308180566277556,
+            "pctile": 5.422374429223744,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.2882824344820387,
+            "pctile": 0.5593607305936072,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 2.48210174968619,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.17292762304117462,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.9720319634703196,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 1.1187214611872145,
+        "pctile_14d": 5.422374429223744,
+        "pctile_30d": 0.5593607305936072
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.25061355279157566,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

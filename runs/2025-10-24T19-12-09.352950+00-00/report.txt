@@ -1,0 +1,14 @@
+Prompt: Breakout play on ARB with volume expansion, risk sizing per max 3% drawdown, and prepare execution instructions.
+Primary asset: ARB
+Assets: ARB
+Recommendation: neutral (score=0.177)
+
+Total runtime: 65.145s
+Phase timings:
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+Combined weights:
+  - volatility_percentile: 0.383
+  - execution_adapter: 0.434
+  - tvl_growth: 0.063
+  - asknews_impact: 0.120

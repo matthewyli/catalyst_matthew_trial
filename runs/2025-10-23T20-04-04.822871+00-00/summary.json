@@ -1,0 +1,326 @@
+{
+  "prompt": "Need volatility percentile regime on ETH and news sentiment",
+  "primary_asset": "ETH",
+  "assets": [
+    "ETH"
+  ],
+  "detected_keywords": [
+    "\\bnews(?:flow|wire)?\\b",
+    "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b",
+    "news",
+    "percentile",
+    "sentiment",
+    "vol",
+    "volatility"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "asknews_impact": [
+          "news",
+          "sentiment"
+        ],
+        "volatility_percentile": [
+          "vol",
+          "volatility",
+          "percentile"
+        ]
+      },
+      "matched_patterns": {
+        "asknews_impact": [
+          "\\bnews(?:flow|wire)?\\b"
+        ],
+        "volatility_percentile": [
+          "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b"
+        ]
+      },
+      "keyword_scores": {
+        "asknews_impact": 4.099,
+        "tvl_growth": 0.0,
+        "volatility_percentile": 5.4435,
+        "execution_adapter": 0.0
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 4.099,
+          "tvl_growth": 0.0,
+          "volatility_percentile": 5.4435,
+          "execution_adapter": 0.0
+        },
+        "blockchain": "ethereum"
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "combined_weights": {
+        "asknews_impact": 0.4744703745045771,
+        "execution_adapter": 0.014406625022255086,
+        "tvl_growth": 0.05590470170370471,
+        "volatility_percentile": 0.4552182987694631
+      },
+      "tool_ranking": [
+        "asknews_impact",
+        "volatility_percentile",
+        "tvl_growth",
+        "execution_adapter"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        },
+        {
+          "phase": "execution",
+          "tool": "execution_adapter"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "ETH"
+        ],
+        "primary_symbol": "ETH",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Need volatility percentile regime on ETH and news sentiment",
+        "detected_keywords": [
+          "\\bnews(?:flow|wire)?\\b",
+          "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b",
+          "news",
+          "percentile",
+          "sentiment",
+          "vol",
+          "volatility"
+        ],
+        "router": {
+          "matched_terms": {
+            "asknews_impact": [
+              "news",
+              "sentiment"
+            ],
+            "volatility_percentile": [
+              "vol",
+              "volatility",
+              "percentile"
+            ]
+          },
+          "matched_patterns": {
+            "asknews_impact": [
+              "\\bnews(?:flow|wire)?\\b"
+            ],
+            "volatility_percentile": [
+              "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b"
+            ]
+          },
+          "keyword_scores": {
+            "asknews_impact": 4.099,
+            "tvl_growth": 0.0,
+            "volatility_percentile": 5.4435,
+            "execution_adapter": 0.0
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 4.099,
+              "tvl_growth": 0.0,
+              "volatility_percentile": 5.4435,
+              "execution_adapter": 0.0
+            },
+            "blockchain": "ethereum"
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "combined_weights": {
+            "asknews_impact": 0.4744703745045771,
+            "execution_adapter": 0.014406625022255086,
+            "tvl_growth": 0.05590470170370471,
+            "volatility_percentile": 0.4552182987694631
+          },
+          "tool_ranking": [
+            "asknews_impact",
+            "volatility_percentile",
+            "tvl_growth",
+            "execution_adapter"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            },
+            {
+              "phase": "execution",
+              "tool": "execution_adapter"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "ETH"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [
+            "volatility",
+            "sentiment"
+          ],
+          "goals": []
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "execution_adapter",
+          "tool_score": 0.014406625022255086
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "asknews_impact": {
+            "asset": "ETH",
+            "window_min": 90,
+            "impact_score": 0.6146,
+            "direction": "down",
+            "confidence": 0.5804,
+            "n_articles": 3,
+            "components": {
+              "event_weight": 0.7472,
+              "sentiment": -0.591,
+              "novelty": 0.86,
+              "source_quality": 0.8592,
+              "entity_match": 0.8791,
+              "time_decay": 0.6446
+            },
+            "top_reasons": [
+              "Highest-impact article tagged exploit, regulatory",
+              "Average source quality 0.86",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": true,
+              "tighten_stops": true,
+              "max_kelly_mult": 0.4,
+              "widen_quotes_bps": 6
+            },
+            "research_summary": null
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "execution_adapter": {
+            "phase": "execution",
+            "mode": "paper",
+            "executed": false,
+            "reason": "empty_orders"
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-23T20:04:04.816559",
+      "phases": [
+        {
+          "phase": "data_gather",
+          "duration_sec": 0.0011977000103797764,
+          "candidates": [
+            "asknews_impact",
+            "tvl_growth"
+          ],
+          "selected": [
+            "asknews_impact",
+            "tvl_growth"
+          ],
+          "note": null
+        },
+        {
+          "phase": "feature_engineering",
+          "duration_sec": 0.004442899982677773,
+          "candidates": [
+            "tvl_growth",
+            "volatility_percentile"
+          ],
+          "selected": [
+            "volatility_percentile"
+          ],
+          "note": null
+        },
+        {
+          "phase": "signal_generation",
+          "duration_sec": 9.000010322779417e-06,
+          "candidates": [
+            "asknews_impact"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "risk_sizing",
+          "duration_sec": 4.3000036384910345e-06,
+          "candidates": [
+            "volatility_percentile"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "execution",
+          "duration_sec": 1.9099999917671084e-05,
+          "candidates": [
+            "execution_adapter"
+          ],
+          "selected": [
+            "execution_adapter"
+          ],
+          "note": null
+        }
+      ],
+      "alerts": [],
+      "total_duration_sec": 0.005676500004483387
+    }
+  },
+  "missing_tools": [],
+  "weights_before": {
+    "asknews_impact": 0.5792799052344517,
+    "tvl_growth": 0.18634900567901566,
+    "execution_adapter": 0.048022083407516944,
+    "volatility_percentile": 0.18634900567901566
+  },
+  "weights_after": {
+    "asknews_impact": 0.5722917236432475,
+    "tvl_growth": 0.16992314483604115,
+    "execution_adapter": 0.08786198668467018,
+    "volatility_percentile": 0.16992314483604115
+  },
+  "selection_weights": {
+    "asknews_impact": 0.8669067744222378,
+    "execution_adapter": 0.13309322557776213
+  },
+  "strategy_notes": [
+    "News: impact 0.61 down (confidence 58%)."
+  ],
+  "recommendation": "neutral",
+  "score": 0.0,
+  "phase_alerts": [],
+  "timestamp": "2025-10-23T20:04:04.822871+00:00"
+}

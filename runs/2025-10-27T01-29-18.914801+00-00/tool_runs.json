@@ -1,0 +1,147 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.25359745651394966,
+    "summary": "No high-impact news found for SOL in the last 90 minutes.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "result": null
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24907328375131657,
+    "summary": "chain:Solana TVL 24,991,859,475 USD | avg momentum 4.35% (1d/7d/30d change: 1D=0.55%, 7D=6.81%, 30D=-2.81%)",
+    "payload": {
+      "value": 0.04349427076417728,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24991859475.0,
+        "pct_changes": {
+          "change_1d": 0.0055,
+          "change_7d": 0.0681,
+          "change_30d": -0.0281,
+          "change_90d": 0.1285
+        },
+        "trailing_ratio": -0.0243
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5735536691087274
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.42644633089127254
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.018547972182174945
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.0,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "result": null
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04349427076417728,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24991859475.0,
+            "pct_changes": {
+              "change_1d": 0.0055,
+              "change_7d": 0.0681,
+              "change_30d": -0.0281,
+              "change_90d": 0.1285
+            },
+            "trailing_ratio": -0.0243
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.247000392178594,
+    "summary": "SOL volatility ~21.8th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.2821975151545627,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.5186125113809614,
+            "pctile": 39.49771689497717,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.41339551747556275,
+            "pctile": 14.920091324200913,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.3351424554335374,
+            "pctile": 2.031963470319635,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 21.78024848454373,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.13448774808212416,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.35559360730593614,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 39.49771689497717,
+        "pctile_14d": 14.920091324200913,
+        "pctile_30d": 2.031963470319635
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2503288675561398,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

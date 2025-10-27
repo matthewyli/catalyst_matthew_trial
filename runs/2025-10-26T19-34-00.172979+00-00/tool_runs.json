@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.26309690542602787,
+    "summary": "SOL news impact 0.32 (up, confidence 29.25%) from 5 articles.",
+    "payload": {
+      "value": 0.321,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.321,
+        "direction": "up",
+        "confidence": 0.2925,
+        "n_articles": 5,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.5281,
+          "novelty": 0.974,
+          "source_quality": 0.6,
+          "entity_match": 0.8584,
+          "time_decay": 0.6154
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Technological Advancements",
+          "Average source quality 0.60",
+          "Fresh within 45 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments in Solana include a new exploit that poses risks, a major exchange listing, a strategic partnership, and increasing regulatory scrutiny. Additionally, a Layer 2 solution is gaining traction, which could enhance scalability. These factors create a mixed outlook for SOL, with both positive and negative catalysts influencing its market dynamics."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24662619547485626,
+    "summary": "chain:Solana TVL 24,843,032,115 USD | avg momentum 4.87% (1d/7d/30d change: 1D=2.94%, 7D=6.46%, 30D=1.25%)",
+    "payload": {
+      "value": 0.04870965193159022,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24843032115.0,
+        "pct_changes": {
+          "change_1d": 0.0294,
+          "change_7d": 0.0646,
+          "change_30d": 0.0125,
+          "change_90d": 0.0884
+        },
+        "trailing_ratio": -0.031
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.58), tvl_growth(0.42)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5762143124129332
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.423785687587067
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.20560724762050722
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.321,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.321,
+            "direction": "up",
+            "confidence": 0.2925,
+            "n_articles": 5,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.5281,
+              "novelty": 0.974,
+              "source_quality": 0.6,
+              "entity_match": 0.8584,
+              "time_decay": 0.6154
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in Solana include a new exploit that poses risks, a major exchange listing, a strategic partnership, and increasing regulatory scrutiny. Additionally, a Layer 2 solution is gaining traction, which could enhance scalability. These factors create a mixed outlook for SOL, with both positive and negative catalysts influencing its market dynamics."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04870965193159022,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24843032115.0,
+            "pct_changes": {
+              "change_1d": 0.0294,
+              "change_7d": 0.0646,
+              "change_30d": 0.0125,
+              "change_90d": 0.0884
+            },
+            "trailing_ratio": -0.031
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.2390796233950867,
+    "summary": "SOL volatility ~2.2th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.47825084011539615,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.23499694596329648,
+            "pctile": 3.458904109589041,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.2772303007610405,
+            "pctile": 1.8949771689497716,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.2807071453798207,
+            "pctile": 0.4337899543378996,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 2.1749159884603846,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.1708862880345952,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.9269406392694064,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 3.458904109589041,
+        "pctile_14d": 1.8949771689497716,
+        "pctile_30d": 0.4337899543378996
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2511972757040292,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

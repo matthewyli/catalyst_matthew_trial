@@ -1,0 +1,14 @@
+Prompt: Detect cross-exchange arbitrage opportunities on ETH with liquidity and TVL confirmation.
+Primary asset: ETH
+Assets: ETH
+Recommendation: neutral (score=-0.055)
+
+Total runtime: 65.136s
+Phase timings:
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+Combined weights:
+  - volatility_percentile: 0.036
+  - execution_adapter: 0.078
+  - tvl_growth: 0.759
+  - asknews_impact: 0.127

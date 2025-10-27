@@ -1,0 +1,17 @@
+Prompt: Need volatility percentile regime on ETH and news sentiment
+Primary asset: ETH
+Assets: ETH
+Recommendation: neutral (score=0.000)
+
+Total runtime: 0.006s
+Phase timings:
+  - data_gather: 0.001s | selected: asknews_impact, tvl_growth | candidates: asknews_impact, tvl_growth
+  - feature_engineering: 0.004s | selected: volatility_percentile | candidates: tvl_growth, volatility_percentile
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+  - execution: 0.000s | selected: execution_adapter | candidates: execution_adapter
+Combined weights:
+  - asknews_impact: 0.474
+  - execution_adapter: 0.014
+  - tvl_growth: 0.056
+  - volatility_percentile: 0.455

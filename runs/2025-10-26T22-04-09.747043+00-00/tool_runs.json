@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.2563547652586749,
+    "summary": "SOL news impact 0.18 (up, confidence 16.95%) from 4 articles.",
+    "payload": {
+      "value": 0.1774,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.1774,
+        "direction": "up",
+        "confidence": 0.1695,
+        "n_articles": 4,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.4501,
+          "novelty": 0.8826,
+          "source_quality": 0.6,
+          "entity_match": 0.7233,
+          "time_decay": 0.6999
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Technological Advancements",
+          "Average source quality 0.60",
+          "Fresh within 30 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Solana is currently facing significant challenges, including a recent security exploit that threatens user funds and new regulatory guidelines that may impact its operations. Additionally, a major exchange has delisted SOL due to regulatory scrutiny. However, there are positive developments, such as a strategic partnership with a tech firm and the upcoming deployment of a Layer 2 scaling solution, which could enhance the network's capabilities."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.24836299224217223,
+    "summary": "chain:Solana TVL 24,748,808,814 USD | avg momentum 4.47% (1d/7d/30d change: 1D=2.55%, 7D=6.06%, 30D=0.86%)",
+    "payload": {
+      "value": 0.04473216300277734,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24748808814.0,
+        "pct_changes": {
+          "change_1d": 0.0255,
+          "change_7d": 0.0606,
+          "change_30d": 0.0086,
+          "change_90d": 0.0842
+        },
+        "trailing_ratio": -0.0346
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5743278372266815
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.42567216277331843
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.12092699489493414
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.1774,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.1774,
+            "direction": "up",
+            "confidence": 0.1695,
+            "n_articles": 4,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.4501,
+              "novelty": 0.8826,
+              "source_quality": 0.6,
+              "entity_match": 0.7233,
+              "time_decay": 0.6999
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 30 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Solana is currently facing significant challenges, including a recent security exploit that threatens user funds and new regulatory guidelines that may impact its operations. Additionally, a major exchange has delisted SOL due to regulatory scrutiny. However, there are positive developments, such as a strategic partnership with a tech firm and the upcoming deployment of a Layer 2 scaling solution, which could enhance the network's capabilities."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04473216300277734,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24748808814.0,
+            "pct_changes": {
+              "change_1d": 0.0255,
+              "change_7d": 0.0606,
+              "change_30d": 0.0086,
+              "change_90d": 0.0842
+            },
+            "trailing_ratio": -0.0346
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.2447013109125279,
+    "summary": "SOL volatility ~2.5th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.4751789825031381,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.1849931464553498,
+            "pctile": 1.1187214611872145,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.3308180566277556,
+            "pctile": 5.422374429223744,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.2882824344820387,
+            "pctile": 0.5593607305936072,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 2.48210174968619,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.17252819623429952,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.9720319634703196,
+          "c4": 0.9885042692594268
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 1.1187214611872145,
+        "pctile_14d": 5.422374429223744,
+        "pctile_30d": 0.5593607305936072
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.25058093158662503,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]

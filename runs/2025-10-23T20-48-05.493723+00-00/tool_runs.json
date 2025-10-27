@@ -1,0 +1,51 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.11060570035715932,
+    "summary": "chain:Solana TVL 23,797,385,135 USD | avg momentum -0.38% (1d/7d/30d change: 1D=0.00%, 7D=2.66%, 30D=-10.20%)",
+    "payload": {
+      "metric": "chain:Solana",
+      "latest_tvl": 23797385135.0,
+      "pct_changes": {
+        "change_1d": 0.0,
+        "change_7d": 0.0266,
+        "change_30d": -0.102,
+        "change_90d": 0.0604
+      },
+      "trailing_ratio": -0.0756
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.5470558424004148,
+    "summary": "No high-impact news found for SOL in the last 90 minutes.",
+    "payload": {
+      "asset": "SOL",
+      "window_min": 90,
+      "result": null
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.11060570035715932,
+    "summary": "volatility_percentile failed: Mobula price fetch failed: name 'requests' is not defined",
+    "payload": {
+      "error": "Mobula price fetch failed: name 'requests' is not defined"
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.23173275688526654,
+    "summary": "No orders to execute.",
+    "payload": {
+      "phase": "execution",
+      "mode": "paper",
+      "executed": false,
+      "reason": "empty_orders"
+    }
+  }
+]

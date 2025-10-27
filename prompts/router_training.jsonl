@@ -1,0 +1,3 @@
+{"prompt": "Scan latest SOL headlines for high impact events.", "tools": ["asknews_impact"]}
+{"prompt": "Evaluate DeFi liquidity momentum on Ethereum TVL.", "tools": ["tvl_growth"]}
+{"prompt": "Measure BTC volatility percentile for 7 and 30 day windows.", "tools": ["volatility_percentile"]}

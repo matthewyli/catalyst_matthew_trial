@@ -1,0 +1,17 @@
+Prompt: Test strategy trade
+Primary asset: SOL
+Assets: SOL
+Recommendation: neutral (score=0.165)
+
+Total runtime: 46.280s
+Phase timings:
+  - data_gather: 41.330s | selected: asknews_impact, tvl_growth | candidates: asknews_impact, tvl_growth | note: combined 2 tools
+  - feature_engineering: 4.949s | selected: volatility_percentile | candidates: volatility_percentile, tvl_growth
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+  - execution: 0.000s | selected: execution_adapter | candidates: execution_adapter
+Combined weights:
+  - execution_adapter: 0.778
+  - volatility_percentile: 0.046
+  - tvl_growth: 0.066
+  - asknews_impact: 0.110

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "trend_follow_sol",
+    "description": "Trend-follow strategy on Solana using TVL momentum and EMA cross filters.",
+    "prompt": "Trend-follow SOL with a 4h EMA cross and TVL filter, targeting breakout entries.",
+    "asset": "SOL"
+  },
+  {
+    "id": "mean_reversion_btc",
+    "description": "Mean reversion on BTC using volatility and sentiment cues.",
+    "prompt": "Mean reversion on BTC when 1h volatility percentile spikes above 90 and news sentiment turns negative.",
+    "asset": "BTC"
+  },
+  {
+    "id": "arbitrage_eth",
+    "description": "Cross-market arbitrage detection for ETH with liquidity checks.",
+    "prompt": "Detect cross-exchange arbitrage opportunities on ETH with liquidity and TVL confirmation.",
+    "asset": "ETH"
+  },
+  {
+    "id": "hedge_portfolio",
+    "description": "Portfolio hedge plan based on macro sentiment and drawdown limits.",
+    "prompt": "Design a hedge strategy for a diversified crypto portfolio when macro sentiment deteriorates and drawdown breaches 10%.",
+    "asset": "BTC"
+  },
+  {
+    "id": "altcoin_breakout",
+    "description": "Altcoin breakout play with risk sizing and execution focus.",
+    "prompt": "Breakout play on ARB with volume expansion, risk sizing per max 3% drawdown, and prepare execution instructions.",
+    "asset": "ARB"
+  }
+]

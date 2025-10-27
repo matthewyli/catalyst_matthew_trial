@@ -1,0 +1,180 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.22277491384152276,
+    "summary": "chain:Solana TVL 24,241,638,164 USD | avg momentum 2.19% (1d/7d/30d change: 1D=1.94%, 7D=5.99%, 30D=-7.98%)",
+    "payload": {
+      "metric": "chain:Solana",
+      "latest_tvl": 24241638164.0,
+      "pct_changes": {
+        "change_1d": 0.0194,
+        "change_7d": 0.0599,
+        "change_30d": -0.0798,
+        "change_90d": 0.0882
+      },
+      "trailing_ratio": -0.0542
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.3556861403722976,
+    "summary": "SOL news impact 0.17 (up, confidence 16.59%) from 4 articles.",
+    "payload": {
+      "asset": "SOL",
+      "window_min": 90,
+      "impact_score": 0.1714,
+      "direction": "up",
+      "confidence": 0.1659,
+      "n_articles": 4,
+      "components": {
+        "event_weight": 0.25,
+        "sentiment": 1.0,
+        "novelty": 1.0,
+        "source_quality": 0.6,
+        "entity_match": 1.0,
+        "time_decay": 0.597
+      },
+      "top_reasons": [
+        "Highest-impact article tagged Technological Advancements",
+        "Average source quality 0.60",
+        "Fresh within 45 minutes"
+      ],
+      "ops_flags": {
+        "suspend_new_longs": false,
+        "tighten_stops": false,
+        "max_kelly_mult": 1.0,
+        "widen_quotes_bps": 0
+      },
+      "research_summary": "Recent developments in Solana include a strategic partnership with a fintech firm aimed at enhancing blockchain adoption, a minor exploit that was quickly patched, and new regulatory guidelines affecting its operations. Additionally, a leading exchange has listed Solana's new Layer 2 solution, which could improve scalability and transaction speed."
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: tvl_growth(0.88), asknews_impact(0.12)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "tvl_growth",
+          "weight": 0.8778464091099778
+        },
+        {
+          "name": "asknews_impact",
+          "weight": 0.12215359089002217
+        }
+      ],
+      "weighted_metrics": {
+        "latest_tvl": 21280435013.210796,
+        "trailing_ratio": -0.0475792753737608,
+        "window_min": 10.993823180101996,
+        "impact_score": 0.0209371254785498,
+        "confidence": 0.02026528072865468,
+        "n_articles": 0.4886143635600887
+      },
+      "source_payloads": {
+        "tvl_growth": {
+          "metric": "chain:Solana",
+          "latest_tvl": 24241638164.0,
+          "pct_changes": {
+            "change_1d": 0.0194,
+            "change_7d": 0.0599,
+            "change_30d": -0.0798,
+            "change_90d": 0.0882
+          },
+          "trailing_ratio": -0.0542
+        },
+        "asknews_impact": {
+          "asset": "SOL",
+          "window_min": 90,
+          "impact_score": 0.1714,
+          "direction": "up",
+          "confidence": 0.1659,
+          "n_articles": 4,
+          "components": {
+            "event_weight": 0.25,
+            "sentiment": 1.0,
+            "novelty": 1.0,
+            "source_quality": 0.6,
+            "entity_match": 1.0,
+            "time_decay": 0.597
+          },
+          "top_reasons": [
+            "Highest-impact article tagged Technological Advancements",
+            "Average source quality 0.60",
+            "Fresh within 45 minutes"
+          ],
+          "ops_flags": {
+            "suspend_new_longs": false,
+            "tighten_stops": false,
+            "max_kelly_mult": 1.0,
+            "widen_quotes_bps": 0
+          },
+          "research_summary": "Recent developments in Solana include a strategic partnership with a fintech firm aimed at enhancing blockchain adoption, a minor exploit that was quickly patched, and new regulatory guidelines affecting its operations. Additionally, a leading exchange has listed Solana's new Layer 2 solution, which could improve scalability and transaction speed."
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.16187746897129043,
+    "summary": "SOL volatility ~10.3th percentile (confidence 100%)",
+    "payload": {
+      "asset": "SOL",
+      "windows": [
+        7,
+        14,
+        30
+      ],
+      "results": [
+        {
+          "w": 7,
+          "realized_vol": 0.334906699655577,
+          "pctile": 12.933789954337898,
+          "confidence": 1.0
+        },
+        {
+          "w": 14,
+          "realized_vol": 0.39955066603291867,
+          "pctile": 12.625570776255707,
+          "confidence": 1.0
+        },
+        {
+          "w": 30,
+          "realized_vol": 0.35136067454671205,
+          "pctile": 2.5228310502283104,
+          "confidence": 1.0
+        }
+      ],
+      "vol_percentile": 10.283454670978742,
+      "vol_percentile_conf": 1.0,
+      "confidence_scalar": 0.17348342388170868,
+      "confidence_components": {
+        "c1": 0.002949946353269955,
+        "c2": 1.0,
+        "c3": 0.9845890410958904,
+        "c4": 1.0
+      },
+      "mobula_key_present": false,
+      "pctile_7d": 12.933789954337898,
+      "pctile_14d": 12.625570776255707,
+      "pctile_30d": 2.5228310502283104
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.25966147681488916,
+    "summary": "No orders to execute.",
+    "payload": {
+      "phase": "execution",
+      "mode": "paper",
+      "executed": false,
+      "reason": "empty_orders"
+    }
+  }
+]

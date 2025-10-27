@@ -1,0 +1,315 @@
+{
+  "prompt": "Mean reversion on BTC when 1h volatility percentile spikes above 90 and news sentiment turns negative.",
+  "primary_asset": "BTC",
+  "assets": [
+    "BTC"
+  ],
+  "detected_keywords": [
+    "\\bnews(?:flow|wire)?\\b",
+    "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b",
+    "news",
+    "percentile",
+    "sentiment",
+    "vol",
+    "volatility"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "asknews_impact": [
+          "news",
+          "sentiment"
+        ],
+        "volatility_percentile": [
+          "vol",
+          "volatility",
+          "percentile"
+        ]
+      },
+      "matched_patterns": {
+        "asknews_impact": [
+          "\\bnews(?:flow|wire)?\\b"
+        ],
+        "volatility_percentile": [
+          "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b"
+        ]
+      },
+      "keyword_scores": {
+        "asknews_impact": 4.099,
+        "tvl_growth": 0.0,
+        "volatility_percentile": 5.4435,
+        "execution_adapter": 0.0
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 4.099,
+          "tvl_growth": 0.0,
+          "volatility_percentile": 5.4435,
+          "execution_adapter": 0.0
+        }
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "combined_weights": {
+        "volatility_percentile": 0.438805257236444,
+        "execution_adapter": 0.07565188861431556,
+        "tvl_growth": 0.05472387757405313,
+        "asknews_impact": 0.4308189765751873
+      },
+      "tool_ranking": [
+        "volatility_percentile",
+        "asknews_impact",
+        "execution_adapter",
+        "tvl_growth"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        },
+        {
+          "phase": "data_gather",
+          "tool": "tvl_growth"
+        },
+        {
+          "phase": "execution",
+          "tool": "execution_adapter"
+        }
+      ],
+      "phase_combinations": {}
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "BTC"
+        ],
+        "primary_symbol": "BTC",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Mean reversion on BTC when 1h volatility percentile spikes above 90 and news sentiment turns negative.",
+        "detected_keywords": [
+          "\\bnews(?:flow|wire)?\\b",
+          "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b",
+          "news",
+          "percentile",
+          "sentiment",
+          "vol",
+          "volatility"
+        ],
+        "router": {
+          "matched_terms": {
+            "asknews_impact": [
+              "news",
+              "sentiment"
+            ],
+            "volatility_percentile": [
+              "vol",
+              "volatility",
+              "percentile"
+            ]
+          },
+          "matched_patterns": {
+            "asknews_impact": [
+              "\\bnews(?:flow|wire)?\\b"
+            ],
+            "volatility_percentile": [
+              "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b"
+            ]
+          },
+          "keyword_scores": {
+            "asknews_impact": 4.099,
+            "tvl_growth": 0.0,
+            "volatility_percentile": 5.4435,
+            "execution_adapter": 0.0
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 4.099,
+              "tvl_growth": 0.0,
+              "volatility_percentile": 5.4435,
+              "execution_adapter": 0.0
+            }
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "combined_weights": {
+            "volatility_percentile": 0.438805257236444,
+            "execution_adapter": 0.07565188861431556,
+            "tvl_growth": 0.05472387757405313,
+            "asknews_impact": 0.4308189765751873
+          },
+          "tool_ranking": [
+            "volatility_percentile",
+            "asknews_impact",
+            "execution_adapter",
+            "tvl_growth"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            },
+            {
+              "phase": "data_gather",
+              "tool": "tvl_growth"
+            },
+            {
+              "phase": "execution",
+              "tool": "execution_adapter"
+            }
+          ],
+          "phase_combinations": {}
+        },
+        "parse": {
+          "assets": [
+            "BTC"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [
+            "rsi",
+            "volatility",
+            "sentiment"
+          ],
+          "goals": [
+            "mean reversion"
+          ]
+        },
+        "options": {
+          "force_refresh": false
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "execution_adapter",
+          "tool_score": 0.07565188861431556
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "asknews_impact": {
+            "asset": "BTC",
+            "window_min": 90,
+            "impact_score": 0.2626,
+            "direction": "up",
+            "confidence": 0.2438,
+            "n_articles": 5,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.2263,
+              "novelty": 0.9178,
+              "source_quality": 0.6,
+              "entity_match": 1.0,
+              "time_decay": 0.5309
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Market Movement, Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments in Bitcoin include a significant partnership with a global payment firm, which has positively impacted its price. However, regulatory scrutiny is increasing with a new U.S. Senate bill proposing stricter controls on Bitcoin transactions. The Lightning Network is seeing record adoption, while a major exchange has delisted Bitcoin due to security concerns. Anticipation around an upcoming Layer 2 upgrade is expected to cause price volatility."
+          },
+          "tvl_growth": {
+            "metric": "defi_total",
+            "latest_tvl": 284231612967.0,
+            "pct_changes": {
+              "change_1d": 0.0,
+              "change_7d": 0.0206,
+              "change_30d": -0.0394,
+              "change_90d": 0.0538
+            },
+            "trailing_ratio": -0.0456
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "execution_adapter": {
+            "phase": "execution",
+            "mode": "paper",
+            "executed": false,
+            "reason": "empty_orders"
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-24T19:08:07.865203",
+      "phases": [
+        {
+          "phase": "signal_generation",
+          "duration_sec": 2.19999928958714e-05,
+          "candidates": [
+            "asknews_impact"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "risk_sizing",
+          "duration_sec": 1.5600002370774746e-05,
+          "candidates": [
+            "volatility_percentile"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        }
+      ],
+      "alerts": [],
+      "total_duration_sec": 70.39299689995823
+    }
+  },
+  "missing_tools": [],
+  "weights_before": {
+    "execution_adapter": 0.2521729620477185,
+    "tvl_growth": 0.18241292524684374,
+    "volatility_percentile": 0.13163886723561857,
+    "asknews_impact": 0.43377524546981916
+  },
+  "weights_after": {
+    "execution_adapter": 0.2593191872288591,
+    "tvl_growth": 0.1957015685037881,
+    "volatility_percentile": 0.12004797659583245,
+    "asknews_impact": 0.4249312676715204
+  },
+  "selection_weights": {
+    "asknews_impact": 0.4829027678436813,
+    "tvl_growth": 0.22240027103602794,
+    "execution_adapter": 0.2946969611202907
+  },
+  "strategy_notes": [
+    "News: impact 0.26 up (confidence 24%).",
+    "TVL: 7d change 2.06%."
+  ],
+  "recommendation": "neutral",
+  "score": 0.0206,
+  "phase_alerts": [],
+  "timestamp": "2025-10-24T19:09:18.260543+00:00"
+}

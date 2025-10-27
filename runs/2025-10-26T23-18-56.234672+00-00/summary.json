@@ -1,0 +1,530 @@
+{
+  "prompt": "Run a SOL swing strategy that trades only when news sentiment is strongly positive, TVL shows a solid week-over-week climb, and volatility stays in a safe regime. If sentiment turns negative or TVL momentum fades, rotate out quickly. Target conservative risk with tight stops.",
+  "primary_asset": "SOL",
+  "assets": [
+    "SOL"
+  ],
+  "detected_keywords": [
+    "\\bnews(?:flow|wire)?\\b",
+    "news",
+    "sentiment",
+    "trade",
+    "tvl",
+    "tvl momentum",
+    "vol",
+    "volatility"
+  ],
+  "metadata": {
+    "router": {
+      "matched_terms": {
+        "asknews_impact": [
+          "news",
+          "sentiment"
+        ],
+        "tvl_growth": [
+          "tvl",
+          "tvl momentum"
+        ],
+        "volatility_percentile": [
+          "vol",
+          "volatility"
+        ],
+        "execution_adapter": [
+          "trade"
+        ]
+      },
+      "matched_patterns": {
+        "asknews_impact": [
+          "\\bnews(?:flow|wire)?\\b"
+        ]
+      },
+      "keyword_scores": {
+        "asknews_impact": 4.099,
+        "tvl_growth": 2.7775,
+        "volatility_percentile": 2.365,
+        "execution_adapter": 1.175
+      },
+      "keyword_weight_alpha": 0.7,
+      "metadata": {
+        "keyword_scores": {
+          "asknews_impact": 4.099,
+          "tvl_growth": 2.7775,
+          "volatility_percentile": 2.365,
+          "execution_adapter": 1.175
+        },
+        "llm_recommendations": [],
+        "llm_weight": 1.0,
+        "window_min": 240,
+        "blockchain": "solana"
+      },
+      "phase_order": [
+        "data_gather",
+        "feature_engineering",
+        "signal_generation",
+        "risk_sizing",
+        "execution"
+      ],
+      "llm_recommendations": [],
+      "strict_io": true,
+      "combined_weights": {
+        "asknews_impact": 0.3519563558509543,
+        "tvl_growth": 0.2612648009812185,
+        "execution_adapter": 0.15409831057266637,
+        "volatility_percentile": 0.23268053259516086
+      },
+      "tool_ranking": [
+        "asknews_impact",
+        "tvl_growth",
+        "volatility_percentile",
+        "execution_adapter"
+      ],
+      "executed_tools": [
+        {
+          "phase": "data_gather",
+          "tool": "asknews_impact"
+        },
+        {
+          "phase": "data_gather",
+          "tool": "tvl_growth"
+        },
+        {
+          "phase": "feature_engineering",
+          "tool": "volatility_percentile"
+        },
+        {
+          "phase": "execution",
+          "tool": "execution_adapter"
+        }
+      ],
+      "phase_combinations": {
+        "data_gather": {
+          "method": "weighted_mean",
+          "tools": [
+            {
+              "name": "asknews_impact",
+              "weight": 0.573946857393373
+            },
+            {
+              "name": "tvl_growth",
+              "weight": 0.426053142606627
+            }
+          ]
+        }
+      }
+    },
+    "context": {
+      "inputs": {
+        "symbols": [
+          "SOL"
+        ],
+        "primary_symbol": "SOL",
+        "timeframe_minutes": 240
+      },
+      "data_sources": {},
+      "risk_constraints": {},
+      "params": {
+        "prompt": "Run a SOL swing strategy that trades only when news sentiment is strongly positive, TVL shows a solid week-over-week climb, and volatility stays in a safe regime. If sentiment turns negative or TVL momentum fades, rotate out quickly. Target conservative risk with tight stops.",
+        "detected_keywords": [
+          "\\bnews(?:flow|wire)?\\b",
+          "news",
+          "sentiment",
+          "trade",
+          "tvl",
+          "tvl momentum",
+          "vol",
+          "volatility"
+        ],
+        "router": {
+          "matched_terms": {
+            "asknews_impact": [
+              "news",
+              "sentiment"
+            ],
+            "tvl_growth": [
+              "tvl",
+              "tvl momentum"
+            ],
+            "volatility_percentile": [
+              "vol",
+              "volatility"
+            ],
+            "execution_adapter": [
+              "trade"
+            ]
+          },
+          "matched_patterns": {
+            "asknews_impact": [
+              "\\bnews(?:flow|wire)?\\b"
+            ]
+          },
+          "keyword_scores": {
+            "asknews_impact": 4.099,
+            "tvl_growth": 2.7775,
+            "volatility_percentile": 2.365,
+            "execution_adapter": 1.175
+          },
+          "keyword_weight_alpha": 0.7,
+          "metadata": {
+            "keyword_scores": {
+              "asknews_impact": 4.099,
+              "tvl_growth": 2.7775,
+              "volatility_percentile": 2.365,
+              "execution_adapter": 1.175
+            },
+            "llm_recommendations": [],
+            "llm_weight": 1.0,
+            "window_min": 240,
+            "blockchain": "solana"
+          },
+          "phase_order": [
+            "data_gather",
+            "feature_engineering",
+            "signal_generation",
+            "risk_sizing",
+            "execution"
+          ],
+          "llm_recommendations": [],
+          "strict_io": true,
+          "combined_weights": {
+            "asknews_impact": 0.3519563558509543,
+            "tvl_growth": 0.2612648009812185,
+            "execution_adapter": 0.15409831057266637,
+            "volatility_percentile": 0.23268053259516086
+          },
+          "tool_ranking": [
+            "asknews_impact",
+            "tvl_growth",
+            "volatility_percentile",
+            "execution_adapter"
+          ],
+          "executed_tools": [
+            {
+              "phase": "data_gather",
+              "tool": "asknews_impact"
+            },
+            {
+              "phase": "data_gather",
+              "tool": "tvl_growth"
+            },
+            {
+              "phase": "feature_engineering",
+              "tool": "volatility_percentile"
+            },
+            {
+              "phase": "execution",
+              "tool": "execution_adapter"
+            }
+          ],
+          "phase_combinations": {
+            "data_gather": {
+              "method": "weighted_mean",
+              "tools": [
+                {
+                  "name": "asknews_impact",
+                  "weight": 0.573946857393373
+                },
+                {
+                  "name": "tvl_growth",
+                  "weight": 0.426053142606627
+                }
+              ]
+            }
+          }
+        },
+        "parse": {
+          "assets": [
+            "SOL"
+          ],
+          "timeframe_minutes": 240,
+          "indicators": [
+            "volatility",
+            "momentum",
+            "tvl",
+            "sentiment"
+          ],
+          "goals": [
+            "swing"
+          ]
+        },
+        "options": {
+          "force_refresh": false,
+          "strict_io": true
+        },
+        "runtime": {
+          "current_phase": "execution",
+          "active_tool": "execution_adapter",
+          "tool_score": 0.15409831057266637
+        }
+      },
+      "phase_outputs": {
+        "data_gather": {
+          "asknews_impact": {
+            "value": 0.1917,
+            "raw": {
+              "asset": "SOL",
+              "window_min": 90,
+              "impact_score": 0.1917,
+              "direction": "up",
+              "confidence": 0.1829,
+              "n_articles": 3,
+              "components": {
+                "event_weight": 0.25,
+                "sentiment": 0.9442,
+                "novelty": 0.9896,
+                "source_quality": 0.6,
+                "entity_match": 0.8848,
+                "time_decay": 0.614
+              },
+              "top_reasons": [
+                "Highest-impact article tagged metrics",
+                "Average source quality 0.60",
+                "Fresh within 45 minutes"
+              ],
+              "ops_flags": {
+                "suspend_new_longs": false,
+                "tighten_stops": false,
+                "max_kelly_mult": 1.0,
+                "widen_quotes_bps": 0
+              },
+              "research_summary": "Recent developments surrounding Solana include a significant partnership with a financial institution aimed at enhancing blockchain solutions, a new Layer 2 solution gaining traction among developers, and a recent exchange listing in Asia that boosts liquidity. However, the network is also facing challenges due to a recent exploit affecting wallets and increasing regulatory scrutiny, which could impact its market performance."
+            }
+          },
+          "tvl_growth": {
+            "value": 0.04768091894703514,
+            "raw": {
+              "metric": "chain:Solana",
+              "latest_tvl": 24818662313.0,
+              "pct_changes": {
+                "change_1d": 0.0284,
+                "change_7d": 0.0635,
+                "change_30d": 0.0115,
+                "change_90d": 0.0873
+              },
+              "trailing_ratio": -0.0319
+            }
+          },
+          "_combined": {
+            "method": "weighted_mean",
+            "source_tools": [
+              {
+                "name": "asknews_impact",
+                "weight": 0.573946857393373
+              },
+              {
+                "name": "tvl_growth",
+                "weight": 0.426053142606627
+              }
+            ],
+            "weighted_metrics": {
+              "value": 0.1303402179220658
+            },
+            "source_payloads": {
+              "asknews_impact": {
+                "value": 0.1917,
+                "raw": {
+                  "asset": "SOL",
+                  "window_min": 90,
+                  "impact_score": 0.1917,
+                  "direction": "up",
+                  "confidence": 0.1829,
+                  "n_articles": 3,
+                  "components": {
+                    "event_weight": 0.25,
+                    "sentiment": 0.9442,
+                    "novelty": 0.9896,
+                    "source_quality": 0.6,
+                    "entity_match": 0.8848,
+                    "time_decay": 0.614
+                  },
+                  "top_reasons": [
+                    "Highest-impact article tagged metrics",
+                    "Average source quality 0.60",
+                    "Fresh within 45 minutes"
+                  ],
+                  "ops_flags": {
+                    "suspend_new_longs": false,
+                    "tighten_stops": false,
+                    "max_kelly_mult": 1.0,
+                    "widen_quotes_bps": 0
+                  },
+                  "research_summary": "Recent developments surrounding Solana include a significant partnership with a financial institution aimed at enhancing blockchain solutions, a new Layer 2 solution gaining traction among developers, and a recent exchange listing in Asia that boosts liquidity. However, the network is also facing challenges due to a recent exploit affecting wallets and increasing regulatory scrutiny, which could impact its market performance."
+                }
+              },
+              "tvl_growth": {
+                "value": 0.04768091894703514,
+                "raw": {
+                  "metric": "chain:Solana",
+                  "latest_tvl": 24818662313.0,
+                  "pct_changes": {
+                    "change_1d": 0.0284,
+                    "change_7d": 0.0635,
+                    "change_30d": 0.0115,
+                    "change_90d": 0.0873
+                  },
+                  "trailing_ratio": -0.0319
+                }
+              }
+            }
+          }
+        },
+        "feature_engineering": {
+          "volatility_percentile": {
+            "value": 0.3648103234455951,
+            "raw": {
+              "asset": "SOL",
+              "windows": [
+                7,
+                14,
+                30
+              ],
+              "results": [
+                {
+                  "w": 7,
+                  "realized_vol": 0.4128267706067982,
+                  "pctile": 23.892694063926943,
+                  "confidence": 1.0
+                },
+                {
+                  "w": 14,
+                  "realized_vol": 0.3764417553296055,
+                  "pctile": 9.97716894977169,
+                  "confidence": 1.0
+                },
+                {
+                  "w": 30,
+                  "realized_vol": 0.31388578166492714,
+                  "pctile": 1.2785388127853883,
+                  "confidence": 1.0
+                }
+              ],
+              "vol_percentile": 13.518967655440491,
+              "vol_percentile_conf": 1.0,
+              "confidence_scalar": 0.149417145048612,
+              "confidence_components": {
+                "c1": 0.002949946353269955,
+                "c2": 1.0,
+                "c3": 0.565068493150685,
+                "c4": 0.9487561995252985
+              },
+              "mobula_key_present": true,
+              "pctile_7d": 23.892694063926943,
+              "pctile_14d": 9.97716894977169,
+              "pctile_30d": 1.2785388127853883
+            }
+          }
+        },
+        "signal_generation": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "risk_sizing": {
+          "_notes": [
+            "reused prior tool outputs"
+          ]
+        },
+        "execution": {
+          "execution_adapter": {
+            "value": 0.0,
+            "raw": {
+              "phase": "execution",
+              "mode": "paper",
+              "executed": false,
+              "reason": "empty_orders"
+            }
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "start_time": "2025-10-26T23:18:12.175526",
+      "phases": [
+        {
+          "phase": "data_gather",
+          "duration_sec": 44.056218400015496,
+          "candidates": [
+            "asknews_impact",
+            "tvl_growth"
+          ],
+          "selected": [
+            "asknews_impact",
+            "tvl_growth"
+          ],
+          "note": "combined 2 tools"
+        },
+        {
+          "phase": "feature_engineering",
+          "duration_sec": 0.002127900021150708,
+          "candidates": [
+            "volatility_percentile",
+            "tvl_growth"
+          ],
+          "selected": [
+            "volatility_percentile"
+          ],
+          "note": null
+        },
+        {
+          "phase": "signal_generation",
+          "duration_sec": 7.399998139590025e-06,
+          "candidates": [
+            "asknews_impact"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "risk_sizing",
+          "duration_sec": 3.1999661587178707e-06,
+          "candidates": [
+            "volatility_percentile"
+          ],
+          "selected": [],
+          "note": "reused prior tool outputs"
+        },
+        {
+          "phase": "execution",
+          "duration_sec": 1.0500021744519472e-05,
+          "candidates": [
+            "execution_adapter"
+          ],
+          "selected": [
+            "execution_adapter"
+          ],
+          "note": null
+        }
+      ],
+      "alerts": [],
+      "total_duration_sec": 44.05836999998428
+    }
+  },
+  "missing_tools": [],
+  "weights_before": {
+    "execution_adapter": 0.2504568239748408,
+    "volatility_percentile": 0.24583329902158213,
+    "asknews_impact": 0.2549971617854574,
+    "tvl_growth": 0.24871271521811958
+  },
+  "weights_after": {
+    "execution_adapter": 0.2504502866206948,
+    "volatility_percentile": 0.24589292636475363,
+    "asknews_impact": 0.2549256501789831,
+    "tvl_growth": 0.24873113683556858
+  },
+  "selection_weights": {
+    "asknews_impact": 0.25492565017898305,
+    "tvl_growth": 0.24873113683556855,
+    "volatility_percentile": 0.24589292636475357,
+    "execution_adapter": 0.25045028662069474
+  },
+  "strategy_notes": [
+    "asknews_impact: strict value 0.1917",
+    "tvl_growth: strict value 0.0477",
+    "volatility_percentile: strict value 0.3648",
+    "execution_adapter: strict value 0.0000"
+  ],
+  "recommendation": "neutral",
+  "score": 0.15104781059815756,
+  "phase_alerts": [],
+  "timestamp": "2025-10-26T23:18:56.234672+00:00"
+}

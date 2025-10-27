@@ -1,0 +1,17 @@
+Prompt: Build a SOL swing strategy that monitors news shocks, rising TVL, and volatility percentiles before issuing trades.
+Primary asset: SOL
+Assets: SOL
+Recommendation: neutral (score=0.156)
+
+Total runtime: 42.261s
+Phase timings:
+  - data_gather: 40.207s | selected: asknews_impact, tvl_growth | candidates: tvl_growth, asknews_impact | note: combined 2 tools
+  - feature_engineering: 2.054s | selected: volatility_percentile | candidates: tvl_growth, volatility_percentile
+  - signal_generation: 0.000s | selected: - | candidates: asknews_impact | note: reused prior tool outputs
+  - risk_sizing: 0.000s | selected: - | candidates: volatility_percentile | note: reused prior tool outputs
+  - execution: 0.000s | selected: execution_adapter | candidates: execution_adapter
+Combined weights:
+  - asknews_impact: 0.321
+  - tvl_growth: 0.171
+  - volatility_percentile: 0.339
+  - execution_adapter: 0.169

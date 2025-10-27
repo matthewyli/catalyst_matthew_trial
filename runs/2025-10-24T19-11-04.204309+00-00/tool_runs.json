@@ -1,0 +1,74 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.40654333312984203,
+    "summary": "BTC news impact 0.15 (up, confidence 14.50%) from 2 articles.",
+    "payload": {
+      "asset": "BTC",
+      "window_min": 90,
+      "impact_score": 0.1495,
+      "direction": "up",
+      "confidence": 0.145,
+      "n_articles": 2,
+      "components": {
+        "event_weight": 0.25,
+        "sentiment": 1.0,
+        "novelty": 1.0,
+        "source_quality": 0.6,
+        "entity_match": 1.0,
+        "time_decay": 0.5041
+      },
+      "top_reasons": [
+        "Highest-impact article tagged Technological Advancements",
+        "Average source quality 0.60",
+        "Fresh within 75 minutes"
+      ],
+      "ops_flags": {
+        "suspend_new_longs": false,
+        "tighten_stops": false,
+        "max_kelly_mult": 1.0,
+        "widen_quotes_bps": 0
+      },
+      "research_summary": "Recent developments in Bitcoin include a significant upgrade to the Lightning Network, enhancing transaction efficiency. However, a security vulnerability in a popular wallet and a trading halt by a major exchange raise concerns. Additionally, rumors of a new regulatory framework could influence market sentiment positively."
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.2014091587897224,
+    "summary": "defi_total TVL 284,231,612,967 USD | avg momentum 0.88% (1d/7d/30d change: 1D=0.00%, 7D=2.06%, 30D=-3.94%)",
+    "payload": {
+      "metric": "defi_total",
+      "latest_tvl": 284231612967.0,
+      "pct_changes": {
+        "change_1d": 0.0,
+        "change_7d": 0.0206,
+        "change_30d": -0.0394,
+        "change_90d": 0.0538
+      },
+      "trailing_ratio": -0.0456
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.1337079090465678,
+    "summary": "volatility_percentile failed: Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}",
+    "payload": {
+      "error": "Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}"
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2583395990338677,
+    "summary": "No orders to execute.",
+    "payload": {
+      "phase": "execution",
+      "mode": "paper",
+      "executed": false,
+      "reason": "empty_orders"
+    }
+  }
+]

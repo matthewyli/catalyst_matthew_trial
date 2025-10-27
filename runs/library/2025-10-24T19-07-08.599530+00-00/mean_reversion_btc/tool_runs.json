@@ -1,0 +1,74 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.43377524546981916,
+    "summary": "BTC news impact 0.26 (up, confidence 24.38%) from 5 articles.",
+    "payload": {
+      "asset": "BTC",
+      "window_min": 90,
+      "impact_score": 0.2626,
+      "direction": "up",
+      "confidence": 0.2438,
+      "n_articles": 5,
+      "components": {
+        "event_weight": 0.25,
+        "sentiment": 0.2263,
+        "novelty": 0.9178,
+        "source_quality": 0.6,
+        "entity_match": 1.0,
+        "time_decay": 0.5309
+      },
+      "top_reasons": [
+        "Highest-impact article tagged Market Movement, Technological Advancements",
+        "Average source quality 0.60",
+        "Fresh within 45 minutes"
+      ],
+      "ops_flags": {
+        "suspend_new_longs": false,
+        "tighten_stops": false,
+        "max_kelly_mult": 1.0,
+        "widen_quotes_bps": 0
+      },
+      "research_summary": "Recent developments in Bitcoin include a significant partnership with a global payment firm, which has positively impacted its price. However, regulatory scrutiny is increasing with a new U.S. Senate bill proposing stricter controls on Bitcoin transactions. The Lightning Network is seeing record adoption, while a major exchange has delisted Bitcoin due to security concerns. Anticipation around an upcoming Layer 2 upgrade is expected to cause price volatility."
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.18241292524684374,
+    "summary": "defi_total TVL 284,231,612,967 USD | avg momentum 0.88% (1d/7d/30d change: 1D=0.00%, 7D=2.06%, 30D=-3.94%)",
+    "payload": {
+      "metric": "defi_total",
+      "latest_tvl": 284231612967.0,
+      "pct_changes": {
+        "change_1d": 0.0,
+        "change_7d": 0.0206,
+        "change_30d": -0.0394,
+        "change_90d": 0.0538
+      },
+      "trailing_ratio": -0.0456
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.13163886723561857,
+    "summary": "volatility_percentile failed: Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}",
+    "payload": {
+      "error": "Mobula price fetch failed: mobula_error:400:{\"statusCode\":400,\"message\":\"Invalid blockchain\"}"
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.2521729620477185,
+    "summary": "No orders to execute.",
+    "payload": {
+      "phase": "execution",
+      "mode": "paper",
+      "executed": false,
+      "reason": "empty_orders"
+    }
+  }
+]

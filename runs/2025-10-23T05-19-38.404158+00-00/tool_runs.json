@@ -1,0 +1,61 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.5727802055818135,
+    "summary": "ETH news impact 0.61 (down, confidence 58.04%) from 3 articles.",
+    "payload": {
+      "asset": "ETH",
+      "window_min": 90,
+      "impact_score": 0.6146,
+      "direction": "down",
+      "confidence": 0.5804,
+      "n_articles": 3,
+      "components": {
+        "event_weight": 0.7472,
+        "sentiment": -0.591,
+        "novelty": 0.86,
+        "source_quality": 0.8592,
+        "entity_match": 0.8791,
+        "time_decay": 0.6446
+      },
+      "top_reasons": [
+        "Highest-impact article tagged exploit, regulatory",
+        "Average source quality 0.86",
+        "Fresh within 45 minutes"
+      ],
+      "ops_flags": {
+        "suspend_new_longs": true,
+        "tighten_stops": true,
+        "max_kelly_mult": 0.4,
+        "widen_quotes_bps": 6
+      },
+      "research_summary": null
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.21360989720909324,
+    "summary": "tvl_growth failed: TVLGrowthTool requires pandas (install via 'pip install pandas').",
+    "payload": {
+      "error": "TVLGrowthTool requires pandas (install via 'pip install pandas')."
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.21360989720909324,
+    "summary": "volatility_percentile failed: vol_pctile (and dependencies pandas, numpy, requests) is required for volatility analysis.",
+    "payload": {
+      "error": "vol_pctile (and dependencies pandas, numpy, requests) is required for volatility analysis."
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "ALERT:execution",
+    "weight": 0.0,
+    "summary": "ALERT: need execution tool",
+    "payload": null
+  }
+]

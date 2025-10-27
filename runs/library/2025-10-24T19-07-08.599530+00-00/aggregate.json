@@ -1,0 +1,75 @@
+{
+  "timestamp": "2025-10-24T19-07-08.599530+00-00",
+  "n_prompts": 5,
+  "entries": [
+    {
+      "id": "trend_follow_sol",
+      "description": "Trend-follow strategy on Solana using TVL momentum and EMA cross filters.",
+      "asset": "SOL",
+      "duration_sec": 59.26346430002013,
+      "recommendation": "neutral",
+      "score": 0.1155683290252499,
+      "alerts": [],
+      "detected_keywords": [
+        "tvl",
+        "tvl filter"
+      ]
+    },
+    {
+      "id": "mean_reversion_btc",
+      "description": "Mean reversion on BTC using volatility and sentiment cues.",
+      "asset": "BTC",
+      "duration_sec": 70.39819959999295,
+      "recommendation": "neutral",
+      "score": 0.0206,
+      "alerts": [],
+      "detected_keywords": [
+        "\\bnews(?:flow|wire)?\\b",
+        "\\bvol(?:atility)?\\s+(?:percentile|rank)\\b",
+        "news",
+        "percentile",
+        "sentiment",
+        "vol",
+        "volatility"
+      ]
+    },
+    {
+      "id": "arbitrage_eth",
+      "description": "Cross-market arbitrage detection for ETH with liquidity checks.",
+      "asset": "ETH",
+      "duration_sec": 65.13935610000044,
+      "recommendation": "neutral",
+      "score": -0.055296756412080796,
+      "alerts": [],
+      "detected_keywords": [
+        "liquidity",
+        "tvl"
+      ]
+    },
+    {
+      "id": "hedge_portfolio",
+      "description": "Portfolio hedge plan based on macro sentiment and drawdown limits.",
+      "asset": "BTC",
+      "duration_sec": 40.801055199990515,
+      "recommendation": "neutral",
+      "score": 0.0206,
+      "alerts": [],
+      "detected_keywords": [
+        "sentiment"
+      ]
+    },
+    {
+      "id": "altcoin_breakout",
+      "description": "Altcoin breakout play with risk sizing and execution focus.",
+      "asset": "ARB",
+      "duration_sec": 65.1473259999766,
+      "recommendation": "neutral",
+      "score": 0.17677456382163748,
+      "alerts": [],
+      "detected_keywords": [
+        "execution",
+        "vol"
+      ]
+    }
+  ]
+}

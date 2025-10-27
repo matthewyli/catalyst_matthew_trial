@@ -1,0 +1,193 @@
+[
+  {
+    "phase": "data_gather",
+    "name": "asknews_impact",
+    "weight": 0.2553852713134848,
+    "summary": "SOL news impact 0.24 (up, confidence 22.43%) from 5 articles.",
+    "payload": {
+      "value": 0.2408,
+      "raw": {
+        "asset": "SOL",
+        "window_min": 90,
+        "impact_score": 0.2408,
+        "direction": "up",
+        "confidence": 0.2243,
+        "n_articles": 5,
+        "components": {
+          "event_weight": 0.25,
+          "sentiment": 0.3607,
+          "novelty": 1.0,
+          "source_quality": 0.6,
+          "entity_match": 0.6508,
+          "time_decay": 0.6455
+        },
+        "top_reasons": [
+          "Highest-impact article tagged Technological Advancements",
+          "Average source quality 0.60",
+          "Fresh within 45 minutes"
+        ],
+        "ops_flags": {
+          "suspend_new_longs": false,
+          "tighten_stops": false,
+          "max_kelly_mult": 1.0,
+          "widen_quotes_bps": 0
+        },
+        "research_summary": "Recent developments around Solana include a new exploit threat, a strategic partnership with a fintech firm, and the launch of a Layer 2 solution. However, regulatory scrutiny is increasing, which could impact operations. A major exchange has also listed Solana, potentially boosting liquidity."
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "tvl_growth",
+    "weight": 0.2486127369683487,
+    "summary": "chain:Solana TVL 24,748,808,814 USD | avg momentum 4.47% (1d/7d/30d change: 1D=2.55%, 7D=6.06%, 30D=0.86%)",
+    "payload": {
+      "value": 0.04473216300277734,
+      "raw": {
+        "metric": "chain:Solana",
+        "latest_tvl": 24748808814.0,
+        "pct_changes": {
+          "change_1d": 0.0255,
+          "change_7d": 0.0606,
+          "change_30d": 0.0086,
+          "change_90d": 0.0842
+        },
+        "trailing_ratio": -0.0346
+      }
+    }
+  },
+  {
+    "phase": "data_gather",
+    "name": "data_gather_combined",
+    "weight": 0.0,
+    "summary": "Combined 2 tools for phase 'data_gather' using weighted_mean: asknews_impact(0.57), tvl_growth(0.43)",
+    "payload": {
+      "method": "weighted_mean",
+      "source_tools": [
+        {
+          "name": "asknews_impact",
+          "weight": 0.5740558096488462
+        },
+        {
+          "name": "tvl_growth",
+          "weight": 0.4259441903511537
+        }
+      ],
+      "weighted_metrics": {
+        "value": 0.15728604391631598
+      },
+      "source_payloads": {
+        "asknews_impact": {
+          "value": 0.2408,
+          "raw": {
+            "asset": "SOL",
+            "window_min": 90,
+            "impact_score": 0.2408,
+            "direction": "up",
+            "confidence": 0.2243,
+            "n_articles": 5,
+            "components": {
+              "event_weight": 0.25,
+              "sentiment": 0.3607,
+              "novelty": 1.0,
+              "source_quality": 0.6,
+              "entity_match": 0.6508,
+              "time_decay": 0.6455
+            },
+            "top_reasons": [
+              "Highest-impact article tagged Technological Advancements",
+              "Average source quality 0.60",
+              "Fresh within 45 minutes"
+            ],
+            "ops_flags": {
+              "suspend_new_longs": false,
+              "tighten_stops": false,
+              "max_kelly_mult": 1.0,
+              "widen_quotes_bps": 0
+            },
+            "research_summary": "Recent developments around Solana include a new exploit threat, a strategic partnership with a fintech firm, and the launch of a Layer 2 solution. However, regulatory scrutiny is increasing, which could impact operations. A major exchange has also listed Solana, potentially boosting liquidity."
+          }
+        },
+        "tvl_growth": {
+          "value": 0.04473216300277734,
+          "raw": {
+            "metric": "chain:Solana",
+            "latest_tvl": 24748808814.0,
+            "pct_changes": {
+              "change_1d": 0.0255,
+              "change_7d": 0.0606,
+              "change_30d": 0.0086,
+              "change_90d": 0.0842
+            },
+            "trailing_ratio": -0.0346
+          }
+        }
+      }
+    }
+  },
+  {
+    "phase": "feature_engineering",
+    "name": "volatility_percentile",
+    "weight": 0.2455096880560795,
+    "summary": "SOL volatility ~13.5th percentile (confidence 100%)",
+    "payload": {
+      "value": 0.3648103234455951,
+      "raw": {
+        "asset": "SOL",
+        "windows": [
+          7,
+          14,
+          30
+        ],
+        "results": [
+          {
+            "w": 7,
+            "realized_vol": 0.4128267706067982,
+            "pctile": 23.892694063926943,
+            "confidence": 1.0
+          },
+          {
+            "w": 14,
+            "realized_vol": 0.3764417553296055,
+            "pctile": 9.97716894977169,
+            "confidence": 1.0
+          },
+          {
+            "w": 30,
+            "realized_vol": 0.31388578166492714,
+            "pctile": 1.2785388127853883,
+            "confidence": 1.0
+          }
+        ],
+        "vol_percentile": 13.518967655440491,
+        "vol_percentile_conf": 1.0,
+        "confidence_scalar": 0.1509974136695204,
+        "confidence_components": {
+          "c1": 0.002949946353269955,
+          "c2": 1.0,
+          "c3": 0.565068493150685,
+          "c4": 1.0
+        },
+        "mobula_key_present": true,
+        "pctile_7d": 23.892694063926943,
+        "pctile_14d": 9.97716894977169,
+        "pctile_30d": 1.2785388127853883
+      }
+    }
+  },
+  {
+    "phase": "execution",
+    "name": "execution_adapter",
+    "weight": 0.25049230366208697,
+    "summary": "No orders to execute.",
+    "payload": {
+      "value": 0.0,
+      "raw": {
+        "phase": "execution",
+        "mode": "paper",
+        "executed": false,
+        "reason": "empty_orders"
+      }
+    }
+  }
+]
