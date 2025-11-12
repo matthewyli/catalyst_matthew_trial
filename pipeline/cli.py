@@ -24,6 +24,33 @@ DEFAULT_HALF_LIFE_HOURS = 24.0
 DEFAULT_BLEND_MODE = "linear"
 DEFAULT_LLM_WEIGHT = 1.0
 
+
+def _load_local_env() -> None:
+    """Load environment variables from a local .env if present (without overriding existing)."""
+
+    env_path = Path(__file__).resolve().parent.parent / ".env"
+    if not env_path.exists():
+        return
+    try:
+        for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            if not key or key in os.environ:
+                continue
+            value = value.strip().strip('"').strip("'")
+            os.environ[key] = value
+    except Exception:
+        # Best-effort; ignore parse/permission errors.
+        return
+
+
+_load_local_env()
+
 def _build_detector() -> KeywordDetector:
     return KeywordDetector(
         tool_keywords=TOOL_KEYWORDS,

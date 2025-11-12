@@ -242,6 +242,7 @@ class StrategyPipeline:
                 continue
 
             selected = self._select_tools_for_phase(candidates, combined_scores)
+            selected = self._ensure_mandatory_phase_tools(phase, selected, raw_candidates)
             if not selected:
                 alert = f"ALERT: need {phase} tool"
                 phase_alerts.append(alert)
@@ -423,6 +424,31 @@ class StrategyPipeline:
         positives = [item for item in scored if item[2] > 0]
         chosen = positives if positives else scored[:1]
         return [(name, tool) for name, tool, _ in chosen]
+
+    def _ensure_mandatory_phase_tools(
+        self,
+        phase: str,
+        selected: List[Tuple[str, BaseTool]],
+        candidates: List[Tuple[str, BaseTool]],
+    ) -> List[Tuple[str, BaseTool]]:
+        """Ensure primer/runtime TextQL tools run even if not requested explicitly."""
+        selected_map = {name for name, _ in selected}
+
+        def add_tool(tool_name: str) -> None:
+            if tool_name in selected_map:
+                return
+            for name, tool in candidates:
+                if name == tool_name:
+                    selected.append((name, tool))
+                    selected_map.add(name)
+                    break
+
+        phase_lower = phase.lower()
+        if phase_lower == "data_gather":
+            add_tool("textql_primer")
+        elif phase_lower in {"feature_engineering", "signal_generation", "risk_sizing"}:
+            add_tool("textql_runtime")
+        return selected
 
     def _compose_strategy_notes(self, asset: Optional[str], results: Sequence[ToolResult]) -> tuple[List[str], float]:
         notes: List[str] = []
@@ -704,6 +730,86 @@ class StrategyPipeline:
             weights = router.get("combined_weights", {})
             for name, value in weights.items():
                 report_lines.append(f"  - {name}: {value:.3f}")
+
+        # Include TextQL plan summary if available
+        plan_entries = [
+            entry
+            for entry in output.tool_runs
+            if isinstance(entry, Mapping) and entry.get("name") == "textql_primer"
+        ]
+        if plan_entries:
+            plan_payload = plan_entries[-1].get("payload") or {}
+            if isinstance(plan_payload, Mapping):
+                report_lines.append("")
+                report_lines.append("TextQL research primer:")
+                mission = plan_payload.get("mission_summary")
+                if mission:
+                    report_lines.append(f"  Mission: {mission}")
+                macro = plan_payload.get("macro_backdrop")
+                if isinstance(macro, Mapping):
+                    regime = macro.get("regime")
+                    risks = macro.get("risk_drivers")
+                    funding = macro.get("funding_or_liquidity")
+                    if regime:
+                        report_lines.append(f"  Regime: {regime}")
+                    if isinstance(risks, Sequence):
+                        report_lines.append(
+                            f"  Risk drivers: {', '.join(str(r) for r in risks if r)}"
+                        )
+                    if isinstance(funding, Sequence):
+                        report_lines.append(
+                            f"  Funding/liquidity: {', '.join(str(f) for f in funding if f)}"
+                        )
+                hypotheses = plan_payload.get("search_hypotheses")
+                if isinstance(hypotheses, Sequence) and hypotheses:
+                    report_lines.append("  Hypotheses:")
+                    for hyp in hypotheses:
+                        if not isinstance(hyp, Mapping):
+                            continue
+                        name = hyp.get("name") or "<unnamed>"
+                        desc = hyp.get("description") or ""
+                        detail = f"    - {name}"
+                        if desc:
+                            detail += f": {desc}"
+                        report_lines.append(detail)
+                        facts = hyp.get("facts")
+                        if isinstance(facts, Sequence) and facts:
+                            for fact in facts:
+                                if not isinstance(fact, Mapping):
+                                    continue
+                                label = fact.get("label") or "fact"
+                                value = fact.get("value")
+                                source = fact.get("source")
+                                as_of = fact.get("as_of")
+                                fact_line = f"        * {label}"
+                                if value not in (None, ""):
+                                    fact_line += f": {value}"
+                                if source:
+                                    fact_line += f" ({source}"
+                                    if as_of:
+                                        fact_line += f", as of {as_of}"
+                                    fact_line += ")"
+                                elif as_of:
+                                    fact_line += f" (as of {as_of})"
+                                report_lines.append(fact_line)
+                        actions = hyp.get("actions")
+                        if isinstance(actions, Sequence) and actions:
+                            for action in actions:
+                                if action:
+                                    report_lines.append(f"        action: {action}")
+                datasets = plan_payload.get("dataset_requests")
+                if isinstance(datasets, Mapping) and datasets:
+                    report_lines.append("  Dataset requests:")
+                    for src, items in datasets.items():
+                        if isinstance(items, Sequence):
+                            joined = ", ".join(str(item) for item in items if item)
+                            report_lines.append(f"    - {src}: {joined}")
+                warnings = plan_payload.get("warnings")
+                if isinstance(warnings, Sequence) and warnings:
+                    report_lines.append("  TextQL warnings:")
+                    for warn in warnings:
+                        report_lines.append(f"    - {warn}")
+
         if output.phase_alerts:
             report_lines.append("Alerts:")
             for alert in output.phase_alerts:

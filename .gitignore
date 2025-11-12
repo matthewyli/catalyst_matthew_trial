@@ -4,6 +4,19 @@
 .env.*.local
 *.env
 !.env.example
+secrets/
+keys/
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+*.cer
+*.csr
+*.der
+*.asc
+*.gpg
+*.pgp
 
 # Python artifacts
 __pycache__/
@@ -14,7 +27,7 @@ __pycache__/
 # pytest cache
 .pytest_cache/
 
-# Generated dumps and run artifacts
+# Generated dumps, logs, and run artifacts
 dumps/
 dump/
 */dumps/
@@ -22,4 +35,36 @@ dump/
 *.dump
 *.dmp
 dumped_series*.csv
+logs/
+*.log
+*.log.*
+*.out
+*.err
+*.trace
 
+# Local pipeline outputs
+runs/
+tool_usage.json
+payload.json
+temp.*
+temp/
+tmp/
+
+# Data caches and storage
+cache/
+data/
+storage/
+*.sqlite
+*.db
+*.pkl
+*.pickle
+*.feather
+*.parquet
+
+# Misc shell/editor cruft
+*.swp
+*.swo
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

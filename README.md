@@ -25,6 +25,7 @@ pipeline package:
   data_contracts.py -> output validators
 
 tools package:
+  textql_context_tool.py -> TextQL primer/runtime research tools
   asknews_tool.py -> news impact score
   tvl_tool.py -> defillama tvl momentum
   volatility_tool.py -> mobula vol percentile
@@ -60,7 +61,7 @@ EXAMPLE prompt flow step by step - ie how its supposed to go through the pipelin
 - run_strategy_with_dummy_trade.py (and the sentinels) convert payloads into strict numeric signals, fetch prices, and produce final guidance
 
 env
-required keys: ASKNEWS_API_ID, ASKNEWS_API_KEY, OPENAI_API_KEY (for llm assist and threshold inference), MOBULA_API_KEY (price + vol data). optional toggles: PIPELINE_STRICT_IO=true (default), PIPELINE_DEBUG, PIPELINE_KEYWORD_ALPHA, PIPELINE_BLEND_MODE, PIPELINE_KEYWORD_WEIGHTS_PATH.
+required keys: ASKNEWS_API_ID, ASKNEWS_API_KEY, OPENAI_API_KEY (for llm assist and threshold inference), MOBULA_API_KEY (price + vol data). optional toggles: PIPELINE_STRICT_IO=true (default), PIPELINE_DEBUG, PIPELINE_KEYWORD_ALPHA, PIPELINE_BLEND_MODE, PIPELINE_KEYWORD_WEIGHTS_PATH. TextQL context planning uses the `TEXTQL_*` block from `.env.example`: drop in your TextQL API key, point `TEXTQL_RPC_URL` at the QueryOneShot endpoint, and leave the Universal paradigm flags enabled if you want web + python support (set `TEXTQL_SQL_CONNECTOR_ID` and switch the paradigm to `TYPE_SQL` only if you need warehouse access). Tune request reliability with `TEXTQL_TIMEOUT_SEC` (default 120s), `TEXTQL_MAX_RETRIES`, and `TEXTQL_RETRY_DELAY_SEC`, and control how long we wait for `GetAPIChatAnswer` via `TEXTQL_POLL_INTERVAL_SEC`, `TEXTQL_POLL_MAX_ATTEMPTS`, `TEXTQL_POLL_MAX_DURATION_SEC`, and `TEXTQL_POLL_BACKOFF_MULTIPLIER`.
 
 keyword trainer (IMPORTANT!!!!!!!!)
 A. edit prompts/router_training.jsonl (or your own json/jsonl) so each entry has a prompt and the tool ids it should pick.

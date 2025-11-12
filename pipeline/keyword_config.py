@@ -16,6 +16,47 @@ class ToolKeywordConfig:
 
 
 TOOL_KEYWORDS: Mapping[str, ToolKeywordConfig] = {
+    "textql_primer": ToolKeywordConfig(
+        terms=[
+            "textql",
+            "research plan",
+            "search plan",
+            "web context",
+            "exa search",
+            "macro context",
+            "market brief",
+            "scout",
+            "discovery",
+        ],
+        patterns=[
+            r"\bdeep\s+research\b",
+            r"\b(search|exa)\s+plan\b",
+            r"\b(world|macro)\s+context\b",
+            r"\bweb\s+recon\b",
+        ],
+        literal_weight=1.2,
+        pattern_weight=1.7,
+        description="Prime the pipeline with a TextQL-powered research scaffold (web + on-chain hypotheses).",
+    ),
+    "textql_runtime": ToolKeywordConfig(
+        terms=[
+            "follow up",
+            "deep dive",
+            "runtime search",
+            "extra context",
+            "check fact",
+            "validate",
+            "refresh data",
+        ],
+        patterns=[
+            r"\bruntime\s+(?:search|textql)\b",
+            r"\bfollow[-\s]?up\b",
+            r"\bdouble\s+check\b",
+        ],
+        literal_weight=1.1,
+        pattern_weight=1.5,
+        description="Launches TextQL follow-up research during later phases to validate or refresh signals.",
+    ),
     "asknews_impact": ToolKeywordConfig(
         terms=[
             "news",
