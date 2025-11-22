@@ -292,6 +292,7 @@ class StrategyPipeline:
                     executed_records.append({"phase": phase, "tool": result.name})
                     context_data.update_phase_output(phase, result.name, result.payload)
                     phase_results.append(result)
+                    self._maybe_print_refined_prompt(result)
                     tool_runs.append(
                         {
                             "phase": phase,
@@ -495,6 +496,16 @@ class StrategyPipeline:
         if not notes and asset:
             notes.append(f"No actionable tool output for {asset}; maintain neutral stance.")
         return notes, score
+
+    def _maybe_print_refined_prompt(self, result: ToolResult) -> None:
+        if not self.debug or result.name != "textql_primer":
+            return
+        payload = result.payload or {}
+        refinement = payload.get("prompt_refinement") or {}
+        refined_prompt = refinement.get("prompt_text") or payload.get("refined_prompt")
+        if refined_prompt:
+            print("[textql_primer] refined prompt:")
+            print(refined_prompt.strip())
 
     def _decide_recommendation(self, score: float) -> str:
         if score > 0.75:

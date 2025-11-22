@@ -3,10 +3,9 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
-
-import requests
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 if PROJECT_ROOT not in sys.path:
@@ -14,6 +13,7 @@ if PROJECT_ROOT not in sys.path:
 
 from pipeline.cli import build_pipeline  # noqa: E402
 from pipeline.strategy_pipeline import StrategyPipeline  # noqa: E402
+from scripts.execute_strategy import build_strategy_spec, execute_strategy, find_latest_run  # noqa: E402
 
 
 SYMBOL_TO_SLUG: Dict[str, str] = {
@@ -35,58 +35,6 @@ def _resolve_asset_slug(asset: str | None) -> str | None:
     if not asset:
         return None
     return SYMBOL_TO_SLUG.get(asset.upper(), asset.lower())
-
-
-def _fetch_price(asset: str) -> Tuple[float | None, Dict[str, object]]:
-    """Fetch the latest price for the requested asset from Mobula."""
-
-    slug = _resolve_asset_slug(asset)
-    if not slug:
-        return None, {"error": "invalid_asset"}
-
-    url = "https://api.mobula.io/api/1/market/history"
-    now = datetime.now(timezone.utc)
-    end = int(now.timestamp() * 1000)
-    start = int((now - timedelta(minutes=30)).timestamp() * 1000)
-
-    params = {
-        "asset": slug,
-        "from": start,
-        "to": end,
-        "interval": "1m",
-    }
-    headers: Dict[str, str] = {}
-    api_key = os.getenv("MOBULA_API_KEY")
-    if api_key:
-        headers["x-api-key"] = api_key
-
-    try:
-        response = requests.get(url, params=params, headers=headers, timeout=10)
-        response.raise_for_status()
-    except Exception:
-        return None, {"error": "mobula_request_failed"}
-
-    try:
-        data = response.json()
-    except ValueError:
-        return None, {"error": "mobula_invalid_json"}
-
-    history = (
-        data.get("data", {}).get("price_history")
-        if isinstance(data, dict) and isinstance(data.get("data"), dict)
-        else None
-    )
-    if not isinstance(history, list) or not history:
-        return None, {"error": "mobula_missing_price", "raw": data}
-    last_entry = history[-1]
-    if isinstance(last_entry, (list, tuple)) and len(last_entry) >= 2:
-        try:
-            price = float(last_entry[1])
-        except (TypeError, ValueError):
-            price = None
-    else:
-        price = None
-    return price, data  # type: ignore[return-value]
 
 
 def _summarise_strict_values(
@@ -133,8 +81,6 @@ def run_strategy(
                 os.environ["PIPELINE_STRICT_IO"] = prev_strict
 
     strict_values, strict_mapping = _summarise_strict_values(output.tool_runs)
-    price, raw_price = _fetch_price(output.primary_asset or (asset or "BTC"))
-
     timestamp = datetime.now(timezone.utc).isoformat()
     if strict_values:
         aggregate = sum(value for _, value, _ in strict_values) / len(strict_values)
@@ -145,10 +91,6 @@ def run_strategy(
     print(f"[strategy] timestamp={timestamp}")
     print(f"[strategy] prompt=\"{prompt}\"")
     print(f"[strategy] aggregate_score={aggregate:.4f} decision={decision}")
-    if price is not None:
-        print(f"[strategy] latest_price={price:.4f}")
-    else:
-        print(f"[strategy] latest_price unavailable; raw={raw_price}")
 
     router_info = output.metadata.get("router", {}) if isinstance(output.metadata, dict) else {}
     tool_ranking = router_info.get("tool_ranking")
@@ -167,25 +109,11 @@ def run_strategy(
             + ", ".join(f"{name}={value:.4f}" for name, value in strict_mapping.items())
         )
 
-    for name, value, raw in strict_values:
-        print(
-            "[trade] tool={name} value={value:.4f} raw={raw}".format(
-                name=name,
-                value=value,
-                raw=raw,
-            )
-        )
-
-    if strict_values and price is not None:
-        print(
-            "[trade] Executed simulated {decision} at price {price:.4f} using aggregate value {aggregate:.4f}".format(
-                decision=decision,
-                price=price,
-                aggregate=aggregate,
-            )
-        )
-    else:
-        print("[trade] Insufficient data for simulated execution; skipping order.")
+    latest_run_dir = find_latest_run(Path("runs"))
+    spec = build_strategy_spec(latest_run_dir)
+    spec_path = Path(latest_run_dir) / "strategy_spec.json"
+    print(f"[strategy] strategy_spec={spec_path}")
+    execute_strategy(spec, iterations=1, interval=0.0)
 
     return {
         "timestamp": timestamp,
@@ -194,8 +122,6 @@ def run_strategy(
         "strict_map": strict_mapping,
         "aggregate": aggregate,
         "decision": decision,
-        "price": price,
-        "price_raw": raw_price,
     }
 
 

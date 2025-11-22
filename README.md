@@ -61,7 +61,7 @@ EXAMPLE prompt flow step by step - ie how its supposed to go through the pipelin
 - run_strategy_with_dummy_trade.py (and the sentinels) convert payloads into strict numeric signals, fetch prices, and produce final guidance
 
 env
-required keys: ASKNEWS_API_ID, ASKNEWS_API_KEY, OPENAI_API_KEY (for llm assist and threshold inference), MOBULA_API_KEY (price + vol data). optional toggles: PIPELINE_STRICT_IO=true (default), PIPELINE_DEBUG, PIPELINE_KEYWORD_ALPHA, PIPELINE_BLEND_MODE, PIPELINE_KEYWORD_WEIGHTS_PATH. TextQL context planning uses the `TEXTQL_*` block from `.env.example`: drop in your TextQL API key, point `TEXTQL_RPC_URL` at the QueryOneShot endpoint, and leave the Universal paradigm flags enabled if you want web + python support (set `TEXTQL_SQL_CONNECTOR_ID` and switch the paradigm to `TYPE_SQL` only if you need warehouse access). Tune request reliability with `TEXTQL_TIMEOUT_SEC` (default 120s), `TEXTQL_MAX_RETRIES`, and `TEXTQL_RETRY_DELAY_SEC`, and control how long we wait for `GetAPIChatAnswer` via `TEXTQL_POLL_INTERVAL_SEC`, `TEXTQL_POLL_MAX_ATTEMPTS`, `TEXTQL_POLL_MAX_DURATION_SEC`, and `TEXTQL_POLL_BACKOFF_MULTIPLIER`.
+required keys: ASKNEWS_API_ID, ASKNEWS_API_KEY, OPENAI_API_KEY (for llm assist and threshold inference), MOBULA_API_KEY (price + vol data). optional toggles: PIPELINE_STRICT_IO=true (default), PIPELINE_DEBUG, PIPELINE_KEYWORD_ALPHA, PIPELINE_BLEND_MODE, PIPELINE_KEYWORD_WEIGHTS_PATH. TextQL context planning uses the `TEXTQL_*` block from `.env.example`: drop in your TextQL API key and, by default, we run via the legacy QueryOneShot + GetAPIChatAnswer flow (`TEXTQL_API_MODE=RPC`). When you’re ready to try the new `/v1/chat` endpoint, flip `TEXTQL_API_MODE=REST` (make sure `TEXTQL_BASE_URL`/Bearer auth are set). Use `TEXTQL_SQL_CONNECTOR_ID` + the `TEXTQL_ENABLE_*` flags to hint which TextQL tools are allowed, and tune reliability with `TEXTQL_TIMEOUT_SEC` (default 120s), `TEXTQL_MAX_RETRIES`, and `TEXTQL_RETRY_DELAY_SEC`.
 
 keyword trainer (IMPORTANT!!!!!!!!)
 A. edit prompts/router_training.jsonl (or your own json/jsonl) so each entry has a prompt and the tool ids it should pick.
@@ -83,6 +83,10 @@ output looks like:
   [trade] tool=volatility_percentile value=0.4125 raw={...}
   [trade] tool=execution_adapter value=0.0000 raw={...}
   [trade] Executed simulated BUY at price 194.1023 using aggregate value 0.1821
+
+turn primer output into an executable loop:
+  python scripts/execute_strategy.py --iterations 2 --interval 60
+  -> finds the newest run, writes runs/<timestamp>/strategy_spec.json, then iterates through the TextQL-defined pipeline layout so you can wire up live data fetching + execution.
 
 continuous sentinel:
   python scripts/sentinel_loop.py --prompt "Conservative SOL swing strategy with strong sentiment and rising TVL" --asset SOL --interval 180

@@ -5,10 +5,13 @@ import os
 import re
 import textwrap
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 import requests
+
+from integrations.textql_client import create_chat, TextQLClientError
 
 from .base import BaseTool, ToolContext, ToolExecutionError, ToolResult
 
@@ -113,10 +116,6 @@ class TextQLPrimerTool(BaseTool):
         self.timeout_seconds = max(5.0, float(timeout_seconds))
         self.include_prompt_in_payload = include_prompt_in_payload
         self.api_key = os.getenv("TEXTQL_API_KEY", "").strip()
-        self.rpc_url = os.getenv(
-            "TEXTQL_RPC_URL",
-            "https://app.textql.com/rpc/public/textql.rpc.public.chat.ChatService/QueryOneShot",
-        ).strip()
         self.model = os.getenv("TEXTQL_MODEL", "MODEL_SONNET_4").strip() or "MODEL_SONNET_4"
         self.paradigm_type = os.getenv("TEXTQL_PARADIGM_TYPE", "TYPE_UNIVERSAL").strip() or "TYPE_UNIVERSAL"
         self.paradigm_version = _env_int("TEXTQL_PARADIGM_VERSION") or 1
@@ -128,6 +127,29 @@ class TextQLPrimerTool(BaseTool):
             self.retry_delay_seconds = max(0.0, float(retry_delay)) if retry_delay else 5.0
         except ValueError:
             self.retry_delay_seconds = 5.0
+        cache_path_env = os.getenv("TEXTQL_CACHE_PATH")
+        if cache_path_env:
+            self.cache_path = Path(cache_path_env).expanduser()
+        else:
+            self.cache_path = Path(os.getenv("TEXTQL_CACHE_DIR", "runs")) / "textql_direct_sample.json"
+        self.log_dir = Path(os.getenv("TEXTQL_LOG_DIR", "runs")) / "textql_logs"
+        try:
+            self.log_dir.mkdir(parents=True, exist_ok=True)
+        except OSError:
+            pass
+        self._last_request_payload: Dict[str, Any] = {}
+        self.connector_ids: List[int] = []
+        if self.sql_connector_id:
+            self.connector_ids.append(self.sql_connector_id)
+        self.api_mode = os.getenv("TEXTQL_API_MODE", "RPC").strip().upper() or "RPC"
+        self.rpc_url = os.getenv(
+            "TEXTQL_RPC_URL",
+            "https://app.textql.com/rpc/public/textql.rpc.public.chat.ChatService/QueryOneShot",
+        ).strip()
+        self.answer_url = os.getenv(
+            "TEXTQL_ANSWER_URL",
+            "https://app.textql.com/rpc/public/textql.rpc.public.chat.ChatService/GetAPIChatAnswer",
+        ).strip()
         self.poll_interval_seconds = max(0.5, float(os.getenv("TEXTQL_POLL_INTERVAL_SEC", "3")))
         self.poll_max_attempts = max(1, int(os.getenv("TEXTQL_POLL_MAX_ATTEMPTS", "40")))
         poll_duration = os.getenv("TEXTQL_POLL_MAX_DURATION_SEC")
@@ -140,15 +162,6 @@ class TextQLPrimerTool(BaseTool):
         except ValueError:
             backoff = 1.25
         self.poll_backoff_multiplier = max(1.0, backoff)
-        self.answer_url = os.getenv(
-            "TEXTQL_ANSWER_URL",
-            "https://app.textql.com/rpc/public/textql.rpc.public.chat.ChatService/GetAPIChatAnswer",
-        ).strip()
-        cache_path_env = os.getenv("TEXTQL_CACHE_PATH")
-        if cache_path_env:
-            self.cache_path = Path(cache_path_env).expanduser()
-        else:
-            self.cache_path = Path(os.getenv("TEXTQL_CACHE_DIR", "runs")) / "textql_direct_sample.json"
         self.universal_flags = {
             "webSearchEnabled": _env_bool("TEXTQL_ENABLE_WEB_SEARCH", True),
             "sqlEnabled": _env_bool("TEXTQL_ENABLE_SQL", False),
@@ -198,6 +211,10 @@ class TextQLPrimerTool(BaseTool):
 
         if not from_cache and "mission_summary" not in plan_payload:
             plan_payload = self._normalize_plan_payload(plan_payload, mission_prompt, context)
+
+        if not from_cache and raw_response is not None:
+            request_payload = getattr(self, "_last_request_payload", {"question": plan_prompt})
+            self._log_interaction(context, request_payload, plan_payload)
 
         payload: Dict[str, Any] = {
             "mission_summary": plan_payload.get("mission_summary"),
@@ -271,17 +288,42 @@ class TextQLPrimerTool(BaseTool):
         return True
 
     # ------------------------------------------------------------------ textql helpers
-    def _call_textql(self, request_prompt: str) -> Any:
+    def _call_textql(self, request_prompt: str) -> Mapping[str, Any]:
+        if self.api_mode == "REST":
+            tools_overrides = dict(self.universal_flags)
+            self._last_request_payload = {
+                "question": request_prompt,
+                "tools": tools_overrides,
+                "connectorIds": self.connector_ids,
+            }
+            try:
+                data = create_chat(
+                    question=request_prompt,
+                    chat_id=None,
+                    connector_ids=self.connector_ids or None,
+                    tools_overrides=tools_overrides,
+                    timeout=self.timeout_seconds,
+                )
+            except TextQLClientError as exc:
+                raise ToolExecutionError(f"TextQL request failed: {exc}") from exc
+
+            response_text = data.get("response", "")
+            if not isinstance(response_text, str) or not response_text.strip():
+                raise ToolExecutionError("TextQL response missing `response` text.")
+            return {"answer": response_text, "chatId": data.get("chatId"), "raw": data}
+
+        return self._call_textql_rpc(request_prompt)
+
+    def _call_textql_rpc(self, request_prompt: str) -> Mapping[str, Any]:
         if not self.rpc_url:
             raise ToolExecutionError("TEXTQL_RPC_URL is not configured.")
-        if not self.api_key:
-            raise ToolExecutionError("TEXTQL_API_KEY is not configured.")
-
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"ApiKey {self.api_key}",
         }
+        if self.api_key:
+            headers["Authorization"] = f"ApiKey {self.api_key}"
         body = self._build_payload(request_prompt)
+        self._last_request_payload = dict(body)
 
         attempts = self.max_retries + 1
         last_error: Optional[Exception] = None
@@ -292,60 +334,24 @@ class TextQLPrimerTool(BaseTool):
                 last_error = exc
             else:
                 if response.status_code >= 400:
-                    raise ToolExecutionError(f"TextQL returned {response.status_code}: {response.text[:200]}")
-                try:
-                    payload = response.json()
-                except ValueError as exc:
-                    raise ToolExecutionError("TextQL response was not valid JSON.") from exc
-
-                resolved = self._resolve_chat_answer(payload)
-                if resolved is not None:
-                    return resolved
-                return payload
+                    last_error = ToolExecutionError(
+                        f"TextQL RPC returned {response.status_code}: {response.text[:200]}"
+                    )
+                else:
+                    try:
+                        payload = response.json()
+                    except ValueError as exc:
+                        last_error = exc
+                    else:
+                        resolved = self._resolve_chat_answer(payload)
+                        if resolved is not None:
+                            return resolved
+                        return payload
 
             if attempt < attempts and self.retry_delay_seconds > 0:
                 time.sleep(self.retry_delay_seconds * attempt)
 
-        legacy_url = os.getenv("TEXTQL_CHAT_URL", "").strip()
-        if legacy_url:
-            try:
-                return self._call_legacy_chat(request_prompt, legacy_url)
-            except ToolExecutionError:
-                pass
-
-        raise ToolExecutionError(f"TextQL request failed after {attempts} attempt(s): {last_error}")
-
-    def _call_legacy_chat(self, prompt: str, url: str) -> Any:
-        headers = {"Content-Type": "application/json"}
-        if self.api_key:
-            headers["Authorization"] = f"Bearer {self.api_key}"
-
-        body: Dict[str, Any] = {
-            "prompt": prompt,
-            "response_format": "json",
-            "metadata": {
-                "max_hypotheses": self.max_hypotheses,
-                "sources": ["exa_web_search", "mobula", "enso"],
-            },
-        }
-
-        try:
-            response = requests.post(url, json=body, headers=headers, timeout=self.timeout_seconds)
-        except requests.RequestException as exc:
-            raise ToolExecutionError(f"TextQL legacy chat error: {exc}") from exc
-
-        if response.status_code >= 400:
-            raise ToolExecutionError(f"TextQL legacy chat returned {response.status_code}: {response.text[:200]}")
-
-        try:
-            payload = response.json()
-        except ValueError as exc:
-            raise ToolExecutionError("TextQL legacy chat response was not valid JSON.") from exc
-
-        resolved = self._resolve_chat_answer(payload)
-        if resolved is not None:
-            return resolved
-        return payload
+        raise ToolExecutionError(f"TextQL RPC request failed after {attempts} attempt(s): {last_error}")
 
     def _resolve_chat_answer(self, payload: Any) -> Optional[Mapping[str, Any]]:
         if not isinstance(payload, Mapping):
@@ -440,6 +446,7 @@ class TextQLPrimerTool(BaseTool):
             f"TextQL chat answer not ready after {attempt} poll(s) / {waited:.1f}s: {last_error}"
         )
 
+
     def _build_payload(self, question: str) -> Dict[str, Any]:
         paradigm: Dict[str, Any] = {
             "type": self.paradigm_type,
@@ -515,19 +522,26 @@ class TextQLPrimerTool(BaseTool):
         indicators = _as_list(parse.get("indicators"))
         timeframe_text = f"{timeframe} minutes" if timeframe else "unspecified"
 
-        prompt_block = textwrap.dedent(
-            f"""
-            You are the Pipeline Research Primer. Before any downstream tool runs, gather real, current data for the thesis below using TextQL capabilities (Exa web search, Mobula metrics, Enso datasets, Python runners). Produce facts that are ready to plug into execution logic.
+        priority_goals = goals or indicators
+        template = textwrap.dedent(
+            """
+            You are the Pipeline Research Primer. Before any downstream tool runs, gather real, current data for the thesis below using TextQL capabilities (Exa web search, Mobula metrics, Enso datasets, Python runners). Produce facts that are ready to plug into execution logic and rewrite the downstream prompt with those facts.
 
             Strategy context:
               - Raw thesis: "{user_prompt}"
-              - Primary asset: {context.asset or (assets[0] if assets else 'unspecified')}
-              - Symbols of interest: {', '.join(assets) if assets else 'n/a'}
+              - Primary asset: {primary_asset}
+              - Symbols of interest: {symbols}
               - Time horizon: {timeframe_text}
-              - Prominent indicators/goals: {', '.join(goals or indicators) if goals or indicators else 'n/a'}
+              - Prominent indicators/goals: {goal_text}
 
-            Your response MUST be valid JSON matching this schema (no markdown, no comments):
+            Your response MUST be valid JSON matching this schema (no markdown, no comments). Avoid embedding fragile point-in-time prices or volumes; instead describe ranges, thresholds, and how the pipeline should monitor them, citing which datasets/endpoints provide the evidence:
             {{
+              "prompt_refinement": {{
+                "background": "brief narrative summarizing the thesis with cited catalysts",
+                "current_state": "data-backed snapshot with metrics + timestamps from TextQL calls",
+                "methodology": "explain how the current state was derived and which signals/APIs proved most reliable",
+                "prompt_text": "rewritten downstream prompt (<=120 words) referencing the validated datasets, triggers, and numeric thresholds"
+              }},
               "mission_summary": "short sentence describing the actionable focus",
               "macro_backdrop": {{
                 "regime": "string",
@@ -553,6 +567,15 @@ class TextQLPrimerTool(BaseTool):
                   "validation": ["conditions that confirm or reject this hypothesis"]
                 }}
               ],
+              "pipeline_layout": [
+                {{
+                  "phase": "name of phase (e.g., data_gather)",
+                  "objective": "what this phase accomplishes",
+                  "inputs": ["datasets or hooks used in this phase"],
+                  "logic": ["rules/thresholds checked"],
+                  "outputs": ["signals produced or actions triggered"]
+                }}
+              ],
               "dataset_requests": {{
                 "mobula": ["endpoint already hit or to refresh"],
                 "enso": ["filter or screener used"],
@@ -565,13 +588,23 @@ class TextQLPrimerTool(BaseTool):
             }}
 
             Requirements:
-              - Use at most {self.max_hypotheses} hypotheses.
-              - Each fact should be grounded in data fetched via TextQL; include numbers and timestamps.
+              - Use at most {max_hypotheses} hypotheses.
+              - Ground prompt_refinement.* in live data so the rewritten prompt is better than the original.
+              - Focus on durable trigger logic (ranges, trend directions, monitoring cadence) and spell out which datasets/endpoints the pipeline should call; do not hardcode today's price/volume unless it illustrates a threshold example.
+              - Describe at least three pipeline_layout entries so downstream automation knows which phase calls which API and why.
+              - Each fact should cite the dataset/API used plus a timestamp or update cadence.
               - Prefer concise sentences; total response under 400 words.
-              - Do not return instructions to run searches—return the search RESULTS.
+              - Do not return instructions to run searches -- return the search RESULTS.
             """
         ).strip()
-        return prompt_block
+        return template.format(
+            user_prompt=user_prompt,
+            primary_asset=context.asset or (assets[0] if assets else "unspecified"),
+            symbols=", ".join(assets) if assets else "n/a",
+            timeframe_text=timeframe_text,
+            goal_text=", ".join(priority_goals) if priority_goals else "n/a",
+            max_hypotheses=self.max_hypotheses,
+        )
 
     def _fallback_plan(self, user_prompt: str, context: ToolContext, reason: str) -> Dict[str, Any]:
         assets = [asset for asset in context.assets if asset] or ["broad-market"]
@@ -617,8 +650,8 @@ class TextQLPrimerTool(BaseTool):
                     ],
                     "facts": [
                         {
-                            "label": "Pending research task",
-                            "value": f"Collect data for: {query}",
+                            "label": "Dataset guidance",
+                            "value": f"Use {query} to capture multi-day trends rather than intraday prints.",
                             "source": "offline_template",
                             "as_of": "",
                             "confidence": "unknown",
@@ -649,11 +682,42 @@ class TextQLPrimerTool(BaseTool):
                 "other": ["Exa web search"],
             },
             "web_sources": [],
+            "pipeline_layout": [
+                {
+                    "phase": "data_gather",
+                    "objective": "Collect news, TVL, and TextQL context before trading logic.",
+                    "inputs": ["asknews.latest", "mobula.tvl", "textql.primer"],
+                    "logic": ["score news impact", "measure TVL momentum", "refine prompt"],
+                    "outputs": ["news_impact_score", "tvl_trend", "refined_prompt"],
+                },
+                {
+                    "phase": "feature_engineering",
+                    "objective": "Convert raw metrics into actionable indicators.",
+                    "inputs": ["mobula.volatility", "textql.runtime"],
+                    "logic": ["compute volatility percentile", "update live hypotheses"],
+                    "outputs": ["volatility_signal", "runtime_context"],
+                },
+                {
+                    "phase": "execution",
+                    "objective": "Decide whether to stage trades or stay neutral.",
+                    "inputs": ["volatility_signal", "news_impact_score", "refined_prompt"],
+                    "logic": ["compare signals to thresholds", "respect refined entry/exit rules"],
+                    "outputs": ["paper_trade_orders", "strategy_notes"],
+                },
+            ],
             "validation_steps": [
                 "Upgrade to live TextQL API for richer search context.",
                 f"Focus early research on {asset} liquidity, flows, and active catalysts.",
             ],
             "fallback_reason": reason,
+            "prompt_refinement": {
+                "background": f"Original thesis: {user_prompt}",
+                "current_state": "Awaiting live TextQL data",
+                "methodology": "Offline template response; upgrade to live TextQL for factual rewrite.",
+                "data_sources": ["offline_template"],
+                "prompt_text": self._default_refined_prompt(user_prompt, context),
+            },
+            "refined_prompt": self._default_refined_prompt(user_prompt, context),
         }
 
     def _normalize_plan_payload(
@@ -724,6 +788,25 @@ class TextQLPrimerTool(BaseTool):
                         existing_steps.append(step)
                 if existing_steps:
                     normalized["validation_steps"] = existing_steps
+
+        refinement = self._compose_prompt_refinement(normalized, user_prompt, context)
+        normalized["prompt_refinement"] = refinement
+        normalized["refined_prompt"] = refinement.get("prompt_text", "")
+
+        layout = normalized.get("pipeline_layout")
+        if not isinstance(layout, Sequence):
+            layout = []
+        normalized["pipeline_layout"] = [
+            {
+                "phase": str(item.get("phase", "")).strip() or "unspecified",
+                "objective": str(item.get("objective", "")).strip(),
+                "inputs": [str(entry).strip() for entry in (item.get("inputs") or []) if str(entry).strip()],
+                "logic": [str(entry).strip() for entry in (item.get("logic") or []) if str(entry).strip()],
+                "outputs": [str(entry).strip() for entry in (item.get("outputs") or []) if str(entry).strip()],
+            }
+            for item in layout
+            if isinstance(item, Mapping)
+        ]
 
         return normalized
 
@@ -844,11 +927,160 @@ class TextQLPrimerTool(BaseTool):
         asset = context.asset or (context.assets[0] if context.assets else "target asset")
         return f"Frame actionable search context for {asset} given: {user_prompt[:160]}"
 
+    def _default_refined_prompt(self, user_prompt: str, context: ToolContext) -> str:
+        asset = context.asset or (context.assets[0] if context.assets else "target asset")
+        base = user_prompt.strip() or "Monitor high-impact catalysts and liquidity checks."
+        return f"{asset}: {base}"
+
+    def _compose_prompt_refinement(
+        self,
+        normalized: Mapping[str, Any],
+        user_prompt: str,
+        context: ToolContext,
+    ) -> Dict[str, str]:
+        asset = context.asset or (context.assets[0] if context.assets else "target asset")
+        raw_refinement = normalized.get("prompt_refinement")
+        if not isinstance(raw_refinement, Mapping):
+            raw_refinement = {}
+
+        mission = str(normalized.get("mission_summary") or "").strip()
+        background = str(raw_refinement.get("background") or mission or user_prompt).strip()
+        if not background:
+            background = f"Original thesis: {user_prompt}"
+
+        macro = normalized.get("macro_backdrop") or {}
+        key_metrics = macro.get("key_metrics") or []
+        metric_bits: List[str] = []
+        if isinstance(key_metrics, Sequence):
+            for metric in key_metrics:
+                if not isinstance(metric, Mapping):
+                    continue
+                label = str(metric.get("label") or "").strip()
+                value = metric.get("value")
+                value_text = str(value) if value not in (None, "") else ""
+                parts = [part for part in [label, value_text] if part]
+                if not parts:
+                    continue
+                metric_str = " ".join(parts)
+                source = str(metric.get("source") or "").strip()
+                if source:
+                    metric_str = f"{metric_str} ({source})"
+                metric_bits.append(metric_str)
+
+        fact_bits: List[str] = []
+        fact_sources: List[str] = []
+        for hypothesis in normalized.get("search_hypotheses") or []:
+            if not isinstance(hypothesis, Mapping):
+                continue
+            for fact in hypothesis.get("facts") or []:
+                if not isinstance(fact, Mapping):
+                    continue
+                label = str(fact.get("label") or "").strip()
+                value = str(fact.get("value") or "").strip()
+                snippet = " ".join([item for item in [label, value] if item]).strip()
+                if snippet:
+                    fact_bits.append(snippet)
+                source = str(fact.get("source") or "").strip()
+                if source:
+                    fact_sources.append(source)
+
+        raw_current_state = str(raw_refinement.get("current_state") or "").strip()
+        current_state = (
+            raw_current_state
+            or "; ".join(metric_bits[:3])
+            or "; ".join(fact_bits[:3])
+            or "Awaiting live TextQL data."
+        )
+
+        dataset_requests = normalized.get("dataset_requests") or {}
+        dataset_bits: List[str] = []
+        if isinstance(dataset_requests, Mapping):
+            for name, entries in dataset_requests.items():
+                if not entries:
+                    continue
+                for entry in entries:
+                    dataset_bits.append(f"{name}:{entry}")
+
+        unique_sources: List[str] = []
+        for source in fact_sources + dataset_bits:
+            source = str(source).strip()
+            if source and source not in unique_sources:
+                unique_sources.append(source)
+
+        raw_methodology = str(raw_refinement.get("methodology") or "").strip()
+        if raw_methodology:
+            methodology = raw_methodology
+        elif unique_sources:
+            methodology = f"Derived from {', '.join(unique_sources[:5])}."
+        else:
+            methodology = "Used cached priors; awaiting confirmed datasets."
+
+        raw_prompt_text = str(raw_refinement.get("prompt_text") or "").strip()
+        prompt_text = raw_prompt_text
+        source_clause = ", ".join(unique_sources[:4]) if unique_sources else "TextQL feeds"
+        if not prompt_text:
+            condition_text = "; ".join((fact_bits or metric_bits)[:2])
+            mission_clause = mission or "update positioning rules"
+            if condition_text:
+                prompt_text = (
+                    f"{asset}: {mission_clause}. Act when {condition_text}. "
+                    f"Refresh inputs via {source_clause}."
+                )
+            else:
+                prompt_text = self._default_refined_prompt(user_prompt, context)
+        elif unique_sources:
+            prompt_text = f"{prompt_text.rstrip('.')} (Reference {source_clause})."
+
+        words = prompt_text.split()
+        if len(words) > 120:
+            prompt_text = " ".join(words[:120])
+
+        return {
+            "background": background,
+            "current_state": current_state,
+            "methodology": methodology,
+            "data_sources": unique_sources[:8],
+            "prompt_text": prompt_text.strip(),
+        }
+
+    def _log_interaction(
+        self,
+        context: ToolContext,
+        request_payload: Mapping[str, Any],
+        response_payload: Mapping[str, Any],
+    ) -> None:
+        try:
+            timestamp = datetime.utcnow().isoformat()
+            log_path = self.log_dir / f"{self.name}_{timestamp.replace(':', '-')}.json"
+            record = {
+                "tool": self.name,
+                "timestamp": timestamp,
+                "asset": context.asset,
+                "assets": list(context.assets),
+                "question": request_payload.get("question"),
+                "response": response_payload,
+            }
+            log_path.write_text(json.dumps(record, indent=2))
+        except Exception:
+            pass
+
     def _summarize(self, asset: Optional[str], payload: Mapping[str, Any], warnings: Sequence[str]) -> str:
         hyp_count = len(payload.get("search_hypotheses") or [])
         warning_text = f" ({len(warnings)} warning)" if warnings else ""
         asset_text = asset or "global"
-        return f"{asset_text}: TextQL initialized {hyp_count} search tracks{warning_text}."
+        refined = ""
+        refinement = payload.get("prompt_refinement")
+        if isinstance(refinement, Mapping):
+            refined = str(refinement.get("prompt_text") or "").strip()
+        if not refined:
+            refined = str(payload.get("refined_prompt") or "").strip()
+        snippet = ""
+        if refined:
+            compact = refined.replace("\n", " ").strip()
+            if len(compact) > 140:
+                compact = compact[:137] + "..."
+            snippet = f" | refined: {compact}"
+        return f"{asset_text}: TextQL refined prompt ({hyp_count} tracks){warning_text}{snippet}"
 
 
 TextQLPrimerTool.__TOOL_META__ = __PRIMER_META__
@@ -914,7 +1146,7 @@ class TextQLRuntimeTool(TextQLPrimerTool):
               - Time horizon: {timeframe_text}
               - Goals/indicators: {', '.join(goals or indicators) if goals or indicators else 'n/a'}
 
-            Return STRICT JSON with the same schema as the primer (facts/actions/validation). Keep it under 250 words and focus on updates that may change decisions right now.
+            Return STRICT JSON with the same schema as the primer (prompt_refinement plus facts/actions/validation). Keep it under 250 words and focus on updates that may change decisions right now.
             """
         ).strip()
         return prompt_block
