@@ -575,6 +575,14 @@ class TextQLPrimerTool(BaseTool):
             """
             You are the Pipeline Research Primer. Before any downstream tool runs, gather real, current data for the thesis below using TextQL capabilities (Exa web search, Mobula metrics, Enso datasets, Python runners). Produce facts that are ready to plug into execution logic and rewrite the downstream prompt with those facts.
 
+            Examples (keep structure and numeric specificity):
+              - Low-vol swing: vol <1.5% hourly, volume >$350M, price change 2-6%, hold 240m, exit vol >3% or volume < $250M.
+              - Breakout confirm: price above $140, buy/sell ratio >1.1, TVL 7d change >5%, volume >$500M, stop if vol >4%.
+              - Mean reversion short: price +8% 24h, vol >5%, volume surge 2x baseline, fade back to VWAP; exit if buy/sell >1.0 or vol <2%.
+              - Whale squeeze setup: funding rate < -0.01%, price flat (+/-1%), whale net inflow >$20M 24h, long bias for short squeeze; exit if funding turns positive or inflows reverse.
+              - Stablecoin farmer: pick pool APY > 8% with TVL >= $50M, stable asset pairs only, rebalance weekly; drop pools if TVL < $40M or APY < 5%.
+              - TVL/price divergence: TVL 7d change > 15% while token price < 2% 7d; buy for catch-up; exit if price rallies >10% or TVL momentum fades (<5% 7d).
+
             Strategy context:
               - Raw thesis: "{user_prompt}"
               - Primary asset: {primary_asset}
@@ -1186,6 +1194,10 @@ class TextQLRuntimeTool(TextQLPrimerTool):
         prompt_block = textwrap.dedent(
             f"""
             You are the Runtime TextQL Analyst. The pipeline is currently in phase "{phase or 'unknown'}". Provide immediate data-backed answers that help execution decisions mid-run.
+
+            Examples (concise, executable):
+              - Confirm long: vol <2%, volume >$400M, price +3-6% 24h, buy/sell >1.0; exit if vol >4% or volume < $250M.
+              - Block execution: conditions_met=false when vol >5% or volume dries up; recommend HOLD/exit.
 
             Context:
               - Original thesis: "{user_prompt}"
