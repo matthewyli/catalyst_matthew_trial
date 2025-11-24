@@ -101,6 +101,7 @@ class TVLGrowthTool(BaseTool):
         params = context.metadata.get("params", {}) if isinstance(context.metadata, dict) else {}
         options = params.get("options", {}) if isinstance(params, dict) else {}
         strict_mode = bool(options.get("strict_io"))
+        overrides = params.get("textql_overrides", {}) if isinstance(params, dict) else {}
 
         try:
             module = importlib.import_module("tools.legacy.tvl_sync_growth")
@@ -157,7 +158,20 @@ class TVLGrowthTool(BaseTool):
             + ")"
         )
 
+        override_info: Dict[str, Any] = {}
+        volume_floor = overrides.get("volume_floor")
+        if isinstance(volume_floor, (int, float)):
+            override_info["target_volume_floor"] = volume_floor
         payload = {"value": growth_score, "raw": raw_payload} if strict_mode else raw_payload
+        if override_info:
+            payload_key = "raw" if strict_mode else None
+            if payload_key:
+                payload[payload_key] = payload.get(payload_key, {})
+                if isinstance(payload[payload_key], dict):
+                    payload[payload_key].setdefault("override", {}).update(override_info)
+            else:
+                payload.setdefault("override", {}).update(override_info)
+
         weight = float(context.weights.get(self.name, 0.0))
         return ToolResult(
             name=self.name,

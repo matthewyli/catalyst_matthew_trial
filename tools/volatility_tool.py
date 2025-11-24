@@ -97,6 +97,7 @@ class VolatilityPercentileTool(BaseTool):
         params = context.metadata.get("params", {}) if isinstance(context.metadata, dict) else {}
         options = params.get("options", {}) if isinstance(params, dict) else {}
         strict_mode = bool(options.get("strict_io"))
+        overrides = params.get("textql_overrides", {}) if isinstance(params, dict) else {}
 
         module = self._load_module()
         fetch_prices_mobula = module.fetch_prices_mobula
@@ -197,7 +198,24 @@ class VolatilityPercentileTool(BaseTool):
         else:
             strict_value = (50.0 - float(score)) / 100.0
 
+        override_info: Dict[str, Any] = {}
+        max_vol_fraction = overrides.get("max_vol_fraction")
+        if isinstance(max_vol_fraction, (int, float)) and score is not None:
+            # Treat score (percentile) as a proxy for risk; if target vol fraction is provided, compare directly.
+            target_pct = max_vol_fraction * 100.0
+            override_info["target_max_vol_pct"] = target_pct
+            override_info["override_compliant"] = score <= target_pct
+
         payload = {"value": strict_value, "raw": raw_payload} if strict_mode else raw_payload
+        if override_info:
+            payload_key = "raw" if strict_mode else None
+            if payload_key:
+                payload[payload_key] = payload.get(payload_key, {})
+                if isinstance(payload[payload_key], dict):
+                    payload[payload_key].setdefault("override", {}).update(override_info)
+            else:
+                payload.setdefault("override", {}).update(override_info)
+
         weight = float(context.weights.get(self.name, 0.0))
         return ToolResult(
             name=self.name,

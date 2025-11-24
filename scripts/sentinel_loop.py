@@ -221,6 +221,25 @@ def _heuristic_thresholds(prompt: str) -> Dict[str, float]:
     return thresholds
 
 
+def _apply_textql_overrides_to_thresholds(thresholds: Dict[str, float], textql_overrides: Mapping[str, Any]) -> Dict[str, float]:
+    updated = dict(thresholds)
+    vol_target = textql_overrides.get("max_vol_fraction")
+    if isinstance(vol_target, (int, float)):
+        updated["max_vol"] = vol_target
+    volume_floor = textql_overrides.get("volume_floor")
+    if isinstance(volume_floor, (int, float)):
+        updated["min_tvl"] = volume_floor / 1e9 if volume_floor > 10_000_000 else max(updated.get("min_tvl", 0.0), volume_floor)
+    price_range = textql_overrides.get("price_change_range")
+    if isinstance(price_range, Mapping):
+        min_score = price_range.get("min")
+        if isinstance(min_score, (int, float)):
+            updated["min_score"] = min(updated.get("min_score", DEFAULT_MIN_SCORE), float(min_score))
+    hold_minutes = textql_overrides.get("hold_minutes")
+    if isinstance(hold_minutes, (int, float)) and hold_minutes > 0:
+        updated["max_vol"] = updated.get("max_vol", DEFAULT_MAX_VOL) * 1.1
+    return updated
+
+
 def derive_thresholds(prompt: str, asset: str) -> tuple[dict[str, float], str]:
     llm_thresholds = _call_openai_for_thresholds(prompt, asset)
     if llm_thresholds:
@@ -281,14 +300,22 @@ def main() -> None:
                 consecutive_errors = 0
 
                 strict_map = result.get("strict_map", {}) or {}
+                # Apply TextQL overrides from the latest run to the thresholds if present.
+                output = result.get("output")
+                if output:
+                    router_meta = output.metadata.get("router", {}) if isinstance(output.metadata, dict) else {}
+                    executed = router_meta.get("executed_tools")
+                    if executed:
+                        print(f"[sentinel] executed_tools={executed}")
+                    overrides_section = output.metadata.get("context", {}).get("params", {}).get("textql_overrides", {})
+                    if overrides_section:
+                        thresholds = _apply_textql_overrides_to_thresholds(thresholds, overrides_section)
+                        print(f"[sentinel] applied_textql_overrides={overrides_section}")
                 if result.get("output"):
                     router_meta = result["output"].metadata.get("router", {})  # type: ignore[assignment]
                     ranking = router_meta.get("tool_ranking")
                     if ranking:
                         print(f"[sentinel] router_ranking={ranking}")
-                    executed = router_meta.get("executed_tools")
-                    if executed:
-                        print(f"[sentinel] executed_tools={executed}")
                 aggregate = float(result["aggregate"])
                 decision, rationale = decide_trade(strict_map, aggregate, thresholds)
                 price = result["price"]

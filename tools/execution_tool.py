@@ -30,6 +30,7 @@ class ExecutionAdapterTool(BaseTool):
         params = context.metadata.get("params", {}) if isinstance(context.metadata, dict) else {}
         options = params.get("options", {}) if isinstance(params, dict) else {}
         strict_mode = bool(options.get("strict_io"))
+        overrides = params.get("textql_overrides", {}) if isinstance(params, dict) else {}
 
         runtime = params.get("runtime", {}) if isinstance(params, dict) else {}
         phase = runtime.get("current_phase", "execution")
@@ -54,6 +55,9 @@ class ExecutionAdapterTool(BaseTool):
 
         requests = self._normalize_orders(orders_payload)
         risk_constraints = context.metadata.get("risk_constraints", {}) or {}
+        risk_constraints = dict(risk_constraints)
+        if overrides:
+            risk_constraints.setdefault("textql_overrides", overrides)
         safe, reason, risk_details = self._check_risk(requests, risk_constraints)
         if not safe:
             raw_payload = {
@@ -84,7 +88,15 @@ class ExecutionAdapterTool(BaseTool):
             "message": response.message,
             "details": response.details,
             "risk": risk_details,
+            "textql_overrides": overrides or None,
         }
+        if overrides:
+            ready_flag = overrides.get("conditions_met")
+            if ready_flag is False:
+                raw_payload["executed"] = False
+                raw_payload["dry_run"] = True
+                raw_payload["message"] = "TextQL runtime marked conditions unmet; forcing dry-run."
+                response = ExecutionResponse(accepted=False, dry_run=True, message=raw_payload["message"], details=response.details)
         if strict_mode:
             value = 1.0 if raw_payload.get("executed") else 0.0
             payload = {"value": value, "raw": raw_payload}

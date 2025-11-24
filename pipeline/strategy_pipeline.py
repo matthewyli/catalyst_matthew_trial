@@ -5,6 +5,7 @@ import datetime as dt
 import json
 import math
 import os
+import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -92,6 +93,7 @@ class StrategyPipeline:
         assets = parsed.assets or list(detection.assets) or ([asset.upper()] if asset else [])
         primary_asset = parsed.primary_asset or (assets[0] if assets else None)
         strict_io = _strict_io_enabled()
+        active_prompt = prompt
 
         if self.debug:
             print("[pipeline] --------------------------------------------------")
@@ -279,7 +281,7 @@ class StrategyPipeline:
                 runtime_state["tool_score"] = combined_scores.get(name, 0.0)
 
                 try:
-                    result = tool.execute(prompt, context)
+                    result = tool.execute(active_prompt, context)
                     meta = getattr(tool, "__TOOL_META__", {}) or {}
                     outputs = {str(o).lower() for o in (meta.get("outputs") or [])}
                     if "backtest" in outputs:
@@ -323,6 +325,20 @@ class StrategyPipeline:
                         }
                     )
                 executed_set.add(name)
+
+                if name == "textql_primer":
+                    refined = self._extract_refined_prompt(result.payload)
+                    if refined:
+                        active_prompt = refined
+                        options["effective_prompt"] = refined
+                        runtime_state["active_prompt"] = refined
+                        if self.debug:
+                            print(f"[pipeline] Updated prompt from TextQL refinement to: {refined[:140]}")
+                    overrides = self._extract_textql_overrides(result.payload)
+                    if overrides:
+                        context_data.params_section("textql_overrides").update(overrides)
+                        if self.debug:
+                            print(f"[pipeline] Applied TextQL overrides: {overrides}")
 
             if len(phase_results) > 1:
                 combined = self._combine_phase_results(phase, phase_results, combined_scores)
@@ -370,6 +386,8 @@ class StrategyPipeline:
             "context": context_data.state,
             "telemetry": telemetry,
         }
+        if context_data.params.get("textql_overrides"):
+            output_metadata["textql_overrides"] = context_data.params.get("textql_overrides")
 
         output = PipelineOutput(
             prompt=prompt,
@@ -397,6 +415,96 @@ class StrategyPipeline:
         return output
 
     # ------------------------------------------------------------------ helpers
+    @staticmethod
+    def _extract_refined_prompt(payload: Any) -> Optional[str]:
+        if not isinstance(payload, Mapping):
+            return None
+        refinement = payload.get("prompt_refinement") or {}
+        if isinstance(refinement, Mapping):
+            candidate = refinement.get("prompt_text")
+            if isinstance(candidate, str) and candidate.strip():
+                return candidate.strip()
+        candidate = payload.get("refined_prompt")
+        if isinstance(candidate, str) and candidate.strip():
+            return candidate.strip()
+        return None
+
+    @staticmethod
+    def _extract_textql_overrides(payload: Any) -> Dict[str, Any]:
+        """Heuristically extract thresholds from TextQL refinement for downstream tools."""
+        if not isinstance(payload, Mapping):
+            return {}
+
+        text_fields: List[str] = []
+        refinement = payload.get("prompt_refinement")
+        if isinstance(refinement, Mapping):
+            for key in ("prompt_text", "current_state", "background", "methodology"):
+                val = refinement.get(key)
+                if isinstance(val, str):
+                    text_fields.append(val)
+        for val in payload.get("validation_steps") or []:
+            if isinstance(val, str):
+                text_fields.append(val)
+        raw_answer = payload.get("raw_textql_response")
+        if isinstance(raw_answer, Mapping):
+            ans = raw_answer.get("answer")
+            if isinstance(ans, str):
+                text_fields.append(ans)
+
+        text = " ".join(text_fields)
+        if not text:
+            return {}
+
+        overrides: Dict[str, Any] = {}
+
+        def parse_money(token: str) -> Optional[float]:
+            token = token.replace(",", "").replace("$", "").strip()
+            multiplier = 1.0
+            if token.lower().endswith("m"):
+                multiplier = 1e6
+                token = token[:-1]
+            elif token.lower().endswith("b"):
+                multiplier = 1e9
+                token = token[:-1]
+            try:
+                return float(token) * multiplier
+            except ValueError:
+                return None
+
+        for match in re.finditer(r"vol(?:atility)?\s*[<>]=?\s*([0-9]+(?:\.[0-9]+)?)\s*%", text, re.IGNORECASE):
+            value = float(match.group(1)) / 100.0
+            if "<" in match.group(0):
+                overrides["max_vol_fraction"] = min(overrides.get("max_vol_fraction", value), value)
+            if ">" in match.group(0):
+                overrides["min_vol_fraction"] = max(overrides.get("min_vol_fraction", value), value)
+
+        for match in re.finditer(r"volume\s*[<>]=?\s*\$?([0-9][0-9.,]*\s*[mb]?)", text, re.IGNORECASE):
+            amount = parse_money(match.group(1))
+            if amount is None:
+                continue
+            if "<" in match.group(0):
+                overrides["volume_exit_threshold"] = min(overrides.get("volume_exit_threshold", amount), amount)
+            if ">" in match.group(0):
+                overrides["volume_floor"] = max(overrides.get("volume_floor", amount), amount)
+
+        range_match = re.search(r"price\s*(?:change|move)?\s*([0-9]+(?:\.[0-9]+)?)\s*-\s*([0-9]+(?:\.[0-9]+)?)\s*%", text, re.IGNORECASE)
+        if range_match:
+            try:
+                low = float(range_match.group(1)) / 100.0
+                high = float(range_match.group(2)) / 100.0
+                overrides["price_change_range"] = {"min": low, "max": high}
+            except ValueError:
+                pass
+
+        for match in re.finditer(r"([0-9]+)\s*(minutes?|mins?|min)", text, re.IGNORECASE):
+            try:
+                overrides["hold_minutes"] = int(match.group(1))
+                break
+            except ValueError:
+                continue
+
+        return overrides
+
     def _tools_for_phase(self, phase: str) -> List[Tuple[str, BaseTool]]:
         phase_lower = phase.lower()
         matched: List[Tuple[str, BaseTool]] = []
@@ -825,6 +933,11 @@ class StrategyPipeline:
             report_lines.append("Alerts:")
             for alert in output.phase_alerts:
                 report_lines.append(f"  - {alert}")
+        overrides = output.metadata.get("textql_overrides")
+        if overrides:
+            report_lines.append("TextQL overrides:")
+            for key, value in overrides.items():
+                report_lines.append(f"  - {key}: {value}")
         (run_dir / "report.txt").write_text("\n".join(report_lines), encoding="utf-8")
 
 

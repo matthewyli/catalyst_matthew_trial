@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -8,8 +9,6 @@ import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
-
-import requests
 
 from integrations.textql_client import create_chat, TextQLClientError
 
@@ -132,6 +131,10 @@ class TextQLPrimerTool(BaseTool):
             self.cache_path = Path(cache_path_env).expanduser()
         else:
             self.cache_path = Path(os.getenv("TEXTQL_CACHE_DIR", "runs")) / "textql_direct_sample.json"
+        try:
+            self.cache_ttl_seconds = float(os.getenv("TEXTQL_CACHE_TTL_SEC", "3600"))
+        except ValueError:
+            self.cache_ttl_seconds = 3600.0
         self.log_dir = Path(os.getenv("TEXTQL_LOG_DIR", "runs")) / "textql_logs"
         try:
             self.log_dir.mkdir(parents=True, exist_ok=True)
@@ -180,6 +183,7 @@ class TextQLPrimerTool(BaseTool):
         params = context.metadata.get("params", {}) if isinstance(context.metadata, dict) else {}
         options = params.get("options", {}) if isinstance(params, dict) else {}
         strict_mode = bool(options.get("strict_io"))
+        force_refresh = bool(options.get("force_refresh"))
 
         mission_prompt = params.get("prompt", prompt)
         plan_prompt = self._build_textql_prompt(mission_prompt, context)
@@ -188,6 +192,7 @@ class TextQLPrimerTool(BaseTool):
 
         plan_payload: Dict[str, Any]
         from_cache = False
+        source = "live"
         if self.api_key:
             try:
                 raw_response = self._call_textql(plan_prompt)
@@ -201,13 +206,16 @@ class TextQLPrimerTool(BaseTool):
                 )
             except ToolExecutionError as exc:
                 warnings.append(str(exc))
-                plan_payload, from_cache = self._cached_or_fallback(mission_prompt, context, "api_error")
+                plan_payload, from_cache = self._cached_or_fallback(mission_prompt, context, "api_error", force_refresh)
+                source = "cache" if from_cache else "fallback"
             except Exception as exc:  # pragma: no cover - defensive parsing guard
                 warnings.append(f"TextQL unexpected error: {exc}")
-                plan_payload, from_cache = self._cached_or_fallback(mission_prompt, context, "api_error")
+                plan_payload, from_cache = self._cached_or_fallback(mission_prompt, context, "api_error", force_refresh)
+                source = "cache" if from_cache else "fallback"
         else:
             warnings.append("TEXTQL_API_KEY missing; generated offline search plan.")
-            plan_payload, from_cache = self._cached_or_fallback(mission_prompt, context, "no_api_key")
+            plan_payload, from_cache = self._cached_or_fallback(mission_prompt, context, "no_api_key", force_refresh)
+            source = "cache" if from_cache else "fallback"
 
         if not from_cache and "mission_summary" not in plan_payload:
             plan_payload = self._normalize_plan_payload(plan_payload, mission_prompt, context)
@@ -225,6 +233,8 @@ class TextQLPrimerTool(BaseTool):
             "validation_steps": plan_payload.get("validation_steps"),
             "warnings": warnings or None,
             "raw_textql_response": raw_response,
+            "source": source,
+            "from_cache": bool(from_cache),
         }
         if self.include_prompt_in_payload:
             payload["textql_prompt"] = plan_prompt
@@ -235,8 +245,14 @@ class TextQLPrimerTool(BaseTool):
         weight = float(context.weights.get(self.name, 0.0))
         return ToolResult(name=self.name, weight=weight, summary=summary, payload=payload)
 
-    def _cached_or_fallback(self, prompt: str, context: ToolContext, reason: str) -> tuple[Dict[str, Any], bool]:
-        cached = self._load_cached(context.asset)
+    def _cached_or_fallback(
+        self,
+        prompt: str,
+        context: ToolContext,
+        reason: str,
+        force_refresh: bool,
+    ) -> tuple[Dict[str, Any], bool]:
+        cached = self._load_cached(context.asset, prompt, force_refresh=force_refresh)
         if cached:
             return cached, True
         return self._fallback_plan(prompt, context, reason), False
@@ -251,31 +267,50 @@ class TextQLPrimerTool(BaseTool):
     ) -> None:
         try:
             struct = dict(payload)
-            struct["raw_textql_response"] = raw_response
+            struct.pop("raw_textql_response", None)
             struct["_cache_meta"] = {
                 "asset": (asset or "").upper(),
-                "prompt": user_prompt,
+                "prompt_hash": self._hash_prompt(user_prompt),
                 "saved_at": time.time(),
             }
+            # write to a per-run file under runs/textql_logs/<asset>/<ts>.json
+            ts = datetime.utcnow().isoformat().replace(":", "-")
+            cache_root = Path(os.getenv("TEXTQL_CACHE_DIR", "runs")) / "textql_logs" / (asset or "global")
+            cache_root.mkdir(parents=True, exist_ok=True)
+            (cache_root / f"{ts}.json").write_text(json.dumps(struct, indent=2), encoding="utf-8")
+            # also keep the legacy cache_path for backward compatibility without raw response
             self.cache_path.parent.mkdir(parents=True, exist_ok=True)
             self.cache_path.write_text(json.dumps(struct, indent=2), encoding="utf-8")
         except Exception:
             pass  # best effort caching
 
-    def _load_cached(self, asset: Optional[str]) -> Optional[Dict[str, Any]]:
-        if not self.cache_path.exists():
+    def _load_cached(self, asset: Optional[str], prompt: str, *, force_refresh: bool) -> Optional[Dict[str, Any]]:
+        if force_refresh:
             return None
-        try:
-            data = json.loads(self.cache_path.read_text(encoding="utf-8"))
-        except Exception:
-            return None
-        if isinstance(data, Mapping) and self._cache_matches_asset(data, asset):
-            cleaned = dict(data)
-            cleaned.pop("_cache_meta", None)
-            return cleaned
+        candidates: list[Path] = []
+        if self.cache_path.exists():
+            candidates.append(self.cache_path)
+        legacy_dir = Path(os.getenv("TEXTQL_CACHE_DIR", "runs")) / "textql_logs" / (asset or "global")
+        if legacy_dir.exists():
+            candidates.extend(sorted(legacy_dir.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True))
+        for path in candidates:
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if isinstance(data, Mapping) and self._cache_matches_asset(data, asset, prompt):
+                meta = data.get("_cache_meta", {})
+                saved_at = meta.get("saved_at")
+                if isinstance(saved_at, (int, float)) and self.cache_ttl_seconds:
+                    age = time.time() - float(saved_at)
+                    if age > self.cache_ttl_seconds:
+                        continue
+                cleaned = dict(data)
+                cleaned.pop("_cache_meta", None)
+                return cleaned
         return None
 
-    def _cache_matches_asset(self, data: Mapping[str, Any], asset: Optional[str]) -> bool:
+    def _cache_matches_asset(self, data: Mapping[str, Any], asset: Optional[str], prompt: str) -> bool:
         meta = data.get("_cache_meta")
         if not isinstance(meta, Mapping):
             return False
@@ -285,7 +320,14 @@ class TextQLPrimerTool(BaseTool):
             return False
         if requested and cached_asset != requested:
             return False
+        cached_prompt_hash = meta.get("prompt_hash")
+        if cached_prompt_hash and cached_prompt_hash != self._hash_prompt(prompt):
+            return False
         return True
+
+    @staticmethod
+    def _hash_prompt(prompt: str) -> str:
+        return hashlib.sha256((prompt or "").encode("utf-8")).hexdigest()
 
     # ------------------------------------------------------------------ textql helpers
     def _call_textql(self, request_prompt: str) -> Mapping[str, Any]:
@@ -303,7 +345,9 @@ class TextQLPrimerTool(BaseTool):
                     connector_ids=self.connector_ids or None,
                     tools_overrides=tools_overrides,
                     timeout=self.timeout_seconds,
-                )
+                api_key=self.api_key or os.getenv("TEXTQL_API_KEY"),
+                base_url=os.getenv("TEXTQL_BASE_URL"),
+            )
             except TextQLClientError as exc:
                 raise ToolExecutionError(f"TextQL request failed: {exc}") from exc
 
@@ -315,6 +359,8 @@ class TextQLPrimerTool(BaseTool):
         return self._call_textql_rpc(request_prompt)
 
     def _call_textql_rpc(self, request_prompt: str) -> Mapping[str, Any]:
+        import requests  # local import to avoid hard dependency at module import time
+
         if not self.rpc_url:
             raise ToolExecutionError("TEXTQL_RPC_URL is not configured.")
         headers = {
@@ -364,6 +410,8 @@ class TextQLPrimerTool(BaseTool):
         return None
 
     def _poll_chat_answer(self, chat_id: str) -> Mapping[str, Any]:
+        import requests  # local import to avoid hard dependency at module import time
+
         headers = {
             "Content-Type": "application/json",
         }

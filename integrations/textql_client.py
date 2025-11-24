@@ -6,18 +6,15 @@ from typing import Any, Dict, List, Optional
 import requests
 
 
-TEXTQL_BASE_URL = os.getenv("TEXTQL_BASE_URL", "https://app.textql.com/v1")
-TEXTQL_API_KEY = os.getenv("TEXTQL_API_KEY")
-
-
 class TextQLClientError(RuntimeError):
     """Raised when the TextQL API returns an error or the call fails."""
 
 
-def _auth_headers() -> Dict[str, str]:
-    if not TEXTQL_API_KEY:
+def _auth_headers(api_key: Optional[str]) -> Dict[str, str]:
+    key = api_key or os.getenv("TEXTQL_API_KEY")
+    if not key:
         raise TextQLClientError("TEXTQL_API_KEY environment variable is missing.")
-    return {"Authorization": f"Bearer {TEXTQL_API_KEY}"}
+    return {"Authorization": f"Bearer {key}"}
 
 
 def create_chat(
@@ -27,12 +24,14 @@ def create_chat(
     connector_ids: Optional[List[int]] = None,
     tools_overrides: Optional[Dict[str, Any]] = None,
     timeout: float = 60.0,
+    api_key: Optional[str] = None,
+    base_url: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Call POST /v1/chat and return the parsed JSON response."""
     if len(question or "") < 3:
         raise ValueError("TextQL question must be at least 3 characters.")
 
-    url = f"{TEXTQL_BASE_URL.rstrip('/')}/chat"
+    url = f"{(base_url or os.getenv('TEXTQL_BASE_URL', 'https://app.textql.com/v1')).rstrip('/')}/chat"
     payload: Dict[str, Any] = {"question": question}
     if chat_id:
         payload["chatId"] = chat_id
@@ -45,7 +44,7 @@ def create_chat(
     if tools:
         payload["tools"] = tools
 
-    headers = {"Content-Type": "application/json", **_auth_headers()}
+    headers = {"Content-Type": "application/json", **_auth_headers(api_key)}
     try:
         response = requests.post(url, json=payload, headers=headers, timeout=timeout)
     except requests.RequestException as exc:
