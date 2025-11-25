@@ -575,13 +575,79 @@ class TextQLPrimerTool(BaseTool):
             """
             You are the Pipeline Research Primer. Before any downstream tool runs, gather real, current data for the thesis below using TextQL capabilities (Exa web search, Mobula metrics, Enso datasets, Python runners). Produce facts that are ready to plug into execution logic and rewrite the downstream prompt with those facts.
 
-            Examples (keep structure and numeric specificity):
-              - Low-vol swing: vol <1.5% hourly, volume >$350M, price change 2-6%, hold 240m, exit vol >3% or volume < $250M.
-              - Breakout confirm: price above $140, buy/sell ratio >1.1, TVL 7d change >5%, volume >$500M, stop if vol >4%.
-              - Mean reversion short: price +8% 24h, vol >5%, volume surge 2x baseline, fade back to VWAP; exit if buy/sell >1.0 or vol <2%.
-              - Whale squeeze setup: funding rate < -0.01%, price flat (+/-1%), whale net inflow >$20M 24h, long bias for short squeeze; exit if funding turns positive or inflows reverse.
-              - Stablecoin farmer: pick pool APY > 8% with TVL >= $50M, stable asset pairs only, rebalance weekly; drop pools if TVL < $40M or APY < 5%.
-              - TVL/price divergence: TVL 7d change > 15% while token price < 2% 7d; buy for catch-up; exit if price rallies >10% or TVL momentum fades (<5% 7d).
+            Examples (illustrate fully-filled JSON; keep this structure and numeric specificity):
+              - Prompt: "Enter ETH long when whales accumulate during negative funding and flat price."
+                JSON:
+                {{
+                  "prompt_refinement": {{
+                    "background": "ETH showing whale inflows with negative funding and flat price range.",
+                    "current_state": "Funding -0.015%, price ±0.8% 24h, whale net inflow $35M 24h.",
+                    "methodology": "Funding from perps API; whale flows from on-chain; price range from Mobula.",
+                    "prompt_text": "Long ETH when funding < -0.01%, whale inflows > $20M 24h, price range <1%. Exit if funding flips >0.01% or inflows reverse."
+                  }},
+                  "mission_summary": "Long ETH for short squeeze risk under whale accumulation + negative funding.",
+                  "macro_backdrop": {{"regime": "rangebound", "risk_drivers": ["funding flips"], "funding_or_liquidity": ["whale inflows"], "key_metrics": []}},
+                  "search_hypotheses": [
+                    {{
+                      "name": "negative_funding_whales",
+                      "description": "Whales buying while shorts pay funding.",
+                      "facts": [{{"label": "funding_rate", "value": "-0.015%", "source": "perps_api"}}, {{"label": "whale_inflow", "value": "$35M", "source": "onchain"}}],
+                      "actions": ["monitor funding < -0.01%", "track inflows > $20M"],
+                      "validation": ["price range <1%", "funding stays negative"]
+                    }}
+                  ],
+                  "pipeline_layout": [{{"phase": "data_gather", "objective": "funding + flows", "inputs": ["perps", "onchain"], "logic": ["check funding", "sum inflows"], "outputs": ["funding_signal", "flow_signal"]}}],
+                  "dataset_requests": {{"mobula": ["market/data?symbol=ETH"], "other": ["perp_funding", "whale_flows"]}},
+                  "validation_steps": ["funding < -0.01%", "whale inflows > $20M", "price range <1%"]
+                }}
+              - Prompt: "Allocate to highest APY stablecoin pool with TVL > $50M; rebalance weekly."
+                JSON:
+                {{
+                  "prompt_refinement": {{
+                    "background": "Stablecoin farming with TVL safety floor.",
+                    "current_state": "Top pool USDC/DAI APY 9.2%, TVL $86M.",
+                    "methodology": "On-chain TVL + APY scraper; filtered stable pairs.",
+                    "prompt_text": "Route to stable pools APY > 8% and TVL >= $50M; rebalance weekly; drop if TVL < $40M or APY < 5%."
+                  }},
+                  "mission_summary": "Pick safest high-yield stable pool above TVL floor.",
+                  "macro_backdrop": {{"regime": "yield_hunting", "risk_drivers": ["smart_contract"], "funding_or_liquidity": ["stable TVL growth"], "key_metrics": []}},
+                  "search_hypotheses": [
+                    {{
+                      "name": "tvl_safety",
+                      "description": "Ensure depth for stable farming.",
+                      "facts": [{{"label": "pool_tvl", "value": "$86M", "source": "dex_tvl_api"}}, {{"label": "apy", "value": "9.2%", "source": "yield_api"}}],
+                      "actions": ["select top APY with TVL > $50M"],
+                      "validation": ["TVL >= $50M", "APY > 8%"]
+                    }}
+                  ],
+                  "pipeline_layout": [{{"phase": "data_gather", "objective": "rank pools", "inputs": ["yield_api", "tvl_api"], "logic": ["filter stable pairs", "sort by APY"], "outputs": ["best_pool"]}}],
+                  "dataset_requests": {{"other": ["yield_api", "defi_tvl"]}},
+                  "validation_steps": ["TVL >= $50M", "APY > 8%", "rebalance weekly"]
+                }}
+              - Prompt: "Find TVL +15% 7d but token price <2% 7d; buy catch-up."
+                JSON:
+                {{
+                  "prompt_refinement": {{
+                    "background": "Protocol TVL rising faster than token.",
+                    "current_state": "TVL +18% 7d, price +1.2% 7d.",
+                    "methodology": "DefiLlama TVL vs Mobula price.",
+                    "prompt_text": "Buy when TVL 7d >15% and price 7d <2%; exit after +10% price or TVL momentum <5%."
+                  }},
+                  "mission_summary": "Exploit TVL/price divergence for catch-up trade.",
+                  "macro_backdrop": {{"regime": "selective_growth", "risk_drivers": ["TVL reversal"], "funding_or_liquidity": [], "key_metrics": []}},
+                  "search_hypotheses": [
+                    {{
+                      "name": "tvl_price_gap",
+                      "description": "Usage up, price lagging.",
+                      "facts": [{{"label": "tvl_7d", "value": "18%", "source": "defillama"}}, {{"label": "price_7d", "value": "1.2%", "source": "mobula"}}],
+                      "actions": ["enter on divergence", "set +10% target"],
+                      "validation": ["TVL >15% 7d", "price <2% 7d"]
+                    }}
+                  ],
+                  "pipeline_layout": [{{"phase": "data_gather", "objective": "pull TVL/price", "inputs": ["defillama", "mobula"], "logic": ["compute 7d deltas"], "outputs": ["divergence_signal"]}}],
+                  "dataset_requests": {{"mobula": ["market/history"], "other": ["defillama_tvl"]}},
+                  "validation_steps": ["TVL >15% 7d", "price <2% 7d", "exit after +10% or TVL <5%"]
+                }}
 
             Strategy context:
               - Raw thesis: "{user_prompt}"
